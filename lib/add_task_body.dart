@@ -1,5 +1,9 @@
+import 'package:do_todo/add_task_cubit.dart';
+import 'package:do_todo/todo_model.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'constant.dart';
 
@@ -12,6 +16,14 @@ class AddTaskBody extends StatefulWidget {
 
 class _AddTaskBodyState extends State<AddTaskBody> {
   final ValueNotifier<Color?> selectedColor = ValueNotifier<Color?>(null);
+  final TextEditingController startTimeController = TextEditingController();
+  final TextEditingController endTimeController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  int selectedReminder = 5;
+  String selectedRepeat = 'Daily';
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +57,19 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                 const SizedBox(
                   height: 20,
                 ),
-                const TextFields(),
+                TextFields(
+                  title: 'Title',
+                  controller: titleController,
+                  hint: 'Enter title',
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                const TextFields(),
+                TextFields(
+                  title: 'Description',
+                  controller: descriptionController,
+                  hint: 'Enter description',
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -65,6 +85,8 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                   height: 10,
                 ),
                 TextField(
+                  controller: dateController,
+                  readOnly: true,
                   decoration: InputDecoration(
                     hintText: 'Enter date',
                     suffixIcon: IconButton(
@@ -75,7 +97,11 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2025),
                         ).then((value) {
-                          print(value);
+                          print(value.toString());
+                          setState(() {
+                            dateController.text =
+                                DateFormat('yyyy-MM-dd').format(value!);
+                          });
                         });
                       },
                       icon: const Icon(Icons.calendar_today),
@@ -106,6 +132,8 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                             height: 10,
                           ),
                           TextField(
+                            readOnly: true,
+                            controller: startTimeController,
                             decoration: InputDecoration(
                               hintText: 'Enter start time',
                               suffixIcon: IconButton(
@@ -113,9 +141,15 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                                   showTimePicker(
                                     context: context,
                                     initialTime: TimeOfDay.now(),
-                                  ).then((value) {
-                                    print(value);
-                                  });
+                                  ).then(
+                                    (value) {
+                                      print(value?.format(context));
+                                      setState(() {
+                                        startTimeController.text =
+                                            value!.format(context);
+                                      });
+                                    },
+                                  );
                                 },
                                 icon: const Icon(Icons.watch_later_outlined),
                               ),
@@ -147,15 +181,21 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                             height: 10,
                           ),
                           TextField(
+                            readOnly: true,
+                            controller: endTimeController,
                             decoration: InputDecoration(
-                              hintText: 'End start time',
+                              hintText: 'Enter end time',
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   showTimePicker(
                                     context: context,
-                                    initialTime: TimeOfDay.now(),
+                                    initialTime: selectedTime,
                                   ).then((value) {
-                                    print(value);
+                                    print(value?.format(context));
+                                    setState(() {
+                                      endTimeController.text =
+                                          value!.format(context);
+                                    });
                                   });
                                 },
                                 icon: const Icon(Icons.watch_later_outlined),
@@ -185,17 +225,22 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                 const SizedBox(
                   height: 10,
                 ),
-                const DropButton(
-                  lists: [
-                    '5 minutes early',
-                    '10 minutes early',
-                    '15 minutes early',
-                    '20 minutes early',
-                    '25 minutes early',
-                    '30 minutes early',
+                ReminderDropButton(
+                  lists: const [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25,
+                    30,
                   ],
                   hint: 'Select reminder',
-                  selected: '5 minutes early',
+                  selected: selectedReminder,
+                  onSelected: (value) {
+                    setState(() {
+                      selectedReminder = value;
+                    });
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -211,15 +256,20 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                 const SizedBox(
                   height: 10,
                 ),
-                const DropButton(
+                DropButton(
                   hint: 'Select repeat',
-                  lists: [
+                  lists: const [
                     'Daily',
                     'Weekly',
                     'Monthly',
                     'Yearly',
                   ],
-                  selected: 'Daily',
+                  selected: selectedRepeat,
+                  onSelected: (value) {
+                    setState(() {
+                      selectedRepeat = value;
+                    });
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -254,25 +304,50 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                         },
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue,
-                      ),
-                      child: const Text(
-                        'Create Task',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          var task = TodoModel(
+                            title: titleController.text,
+                            id: null,
+                            description: descriptionController.text,
+                            date: dateController.text,
+                            startTime: startTimeController.text,
+                            endTime: endTimeController.text,
+                            reminder: selectedReminder,
+                            repeat: selectedRepeat,
+                            color: selectedColor.value?.value??const Color(0xFFE57373).value,
+                            isCompleted: 0,
+                          );
+                          context.read<AddTaskCubit>().addTask(task.toMap());
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blue,
+                          ),
+                          child: const Text(
+                            'Create Task',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
+                const AddTaskBlocListener(),
+
               ],
             ),
           ),
@@ -285,28 +360,36 @@ class _AddTaskBodyState extends State<AddTaskBody> {
 class TextFields extends StatelessWidget {
   const TextFields({
     super.key,
+    required this.title,
+    required this.controller,
+    required this.hint,
   });
+
+  final String title;
+  final String hint;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Title',
-          style: TextStyle(
+          title,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         TextField(
+          controller: controller,
           decoration: InputDecoration(
-            hintText: 'Enter title',
-            border: OutlineInputBorder(
+            hintText: hint,
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           ),
@@ -321,11 +404,13 @@ class DropButton extends StatefulWidget {
       {super.key,
       required this.lists,
       required this.selected,
-      required this.hint});
+      required this.hint,
+      required this.onSelected});
 
   final List<String> lists;
   final String selected;
   final String hint;
+  final ValueChanged<String> onSelected;
 
   @override
   State<DropButton> createState() => _DropButtonState();
@@ -375,10 +460,104 @@ class _DropButtonState extends State<DropButton> {
         return null;
       },
       onChanged: (value) {
-        //Do something when selected item is changed.
+        setState(() {
+          selectedValue = value!;
+        });
+        widget.onSelected(value!);
       },
       onSaved: (value) {
         selectedValue = value.toString();
+      },
+      buttonStyleData: const ButtonStyleData(
+        padding: EdgeInsets.only(right: 8),
+      ),
+      iconStyleData: const IconStyleData(
+        icon: Icon(
+          Icons.arrow_drop_down,
+          color: Colors.black45,
+        ),
+        iconSize: 24,
+      ),
+      dropdownStyleData: DropdownStyleData(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      menuItemStyleData: const MenuItemStyleData(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+      ),
+    );
+  }
+}
+
+class ReminderDropButton extends StatefulWidget {
+  const ReminderDropButton(
+      {super.key,
+      required this.lists,
+      required this.selected,
+      required this.hint,
+      required this.onSelected});
+
+  final List<int> lists;
+  final int selected;
+  final String hint;
+  final ValueChanged<int> onSelected;
+
+  @override
+  State<ReminderDropButton> createState() => _ReminderDropButtonState();
+}
+
+class _ReminderDropButtonState extends State<ReminderDropButton> {
+  int selectedValue = 5;
+
+  @override
+  void initState() {
+    selectedValue = widget.selected;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField2<int>(
+      isExpanded: true,
+      decoration: InputDecoration(
+        // Add Horizontal padding using menuItemStyleData.padding so it matches
+        // the menu padding when button's width is not specified.
+        contentPadding: const EdgeInsets.symmetric(vertical: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        // Add more decoration..
+      ),
+      hint: Text(
+        widget.hint,
+        style: const TextStyle(fontSize: 14),
+      ),
+      items: widget.lists
+          .map((item) => DropdownMenuItem<int>(
+                value: item,
+                child: Text(
+                  "$item minutes early",
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ))
+          .toList(),
+      validator: (value) {
+        if (value == null) {
+          return 'Please select gender.';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        setState(() {
+          selectedValue = value!;
+        });
+        widget.onSelected(value!);
+      },
+      onSaved: (value) {
+        selectedValue = value!;
       },
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
@@ -459,6 +638,34 @@ class BuildColorItem extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class AddTaskBlocListener extends StatelessWidget {
+  const AddTaskBlocListener({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AddTaskCubit, AddTaskState>(
+      listener: (context, state) {
+        if (state is AddTaskSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.green,
+              content: Text('Task added successfully'),
+            ),
+          );
+        } else if (state is AddTaskFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(state.error),
+            ),
+          );
+        }
+      },
+      child: const SizedBox.shrink(),
     );
   }
 }
