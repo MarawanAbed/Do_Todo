@@ -10,10 +10,10 @@ class AddTaskCubit extends Cubit<AddTaskState> {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
 
-  Future<void> addTask(Map<String, dynamic> task) async {
+  Future<void> addTask(Map<String, dynamic> task,BuildContext context) async {
     try {
-      await _databaseHelper.insert(task);
-      emit(AddTaskSuccess());
+      _databaseHelper.insert(task).then((value) {
+      });
     } catch (e) {
       emit(AddTaskFailure(e.toString()));
     }

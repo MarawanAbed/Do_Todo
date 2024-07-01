@@ -11,8 +11,12 @@ class AddTaskPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white.withOpacity(0.9),
-        body: BlocProvider(
-          create: (context) => AddTaskCubit(),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider<AddTaskCubit>(
+              create: (context) => AddTaskCubit(),
+            ),
+          ],
           child: const AddTaskBody(),
         ),
       ),

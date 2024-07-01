@@ -1,4 +1,5 @@
 import 'package:do_todo/add_task_cubit.dart';
+import 'package:do_todo/get_tasks_cubit.dart';
 import 'package:do_todo/todo_model.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -320,10 +321,23 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                             endTime: endTimeController.text,
                             reminder: selectedReminder,
                             repeat: selectedRepeat,
-                            color: selectedColor.value?.value??const Color(0xFFE57373).value,
+                            color: selectedColor.value?.value ??
+                                const Color(0xFFE57373).value,
                             isCompleted: 0,
                           );
-                          context.read<AddTaskCubit>().addTask(task.toMap());
+                          context
+                              .read<AddTaskCubit>()
+                              .addTask(task.toMap(), context)
+                              .then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text('Task added successfully'),
+                              ),
+                            );
+                            Navigator.pop(context);
+                            context.read<GetTasksCubit>().getTasks();
+                          });
                         },
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -347,7 +361,6 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                   ],
                 ),
                 const AddTaskBlocListener(),
-
               ],
             ),
           ),
@@ -649,14 +662,7 @@ class AddTaskBlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AddTaskCubit, AddTaskState>(
       listener: (context, state) {
-        if (state is AddTaskSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.green,
-              content: Text('Task added successfully'),
-            ),
-          );
-        } else if (state is AddTaskFailure) {
+        if (state is AddTaskFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
