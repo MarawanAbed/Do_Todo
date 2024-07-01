@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseHelper {
   static const _databaseName = "MyDatabase.db";
@@ -30,6 +32,8 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   static Database? _database;
+  static DatabaseFactory databaseFactory = databaseFactoryFfi;
+
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -37,12 +41,21 @@ class DatabaseHelper {
     return _database!;
   }
 
+
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
     return await openDatabase(path,
         version: _databaseVersion,
         onCreate: _onCreate);
+  }
+  Future<Database> initDesktopDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, _databaseName);
+    return await databaseFactory.openDatabase(path,options: OpenDatabaseOptions(
+      version: _databaseVersion,
+      onCreate: _onCreate,
+    ));
   }
 
   Future _onCreate(Database db, int version) async {
