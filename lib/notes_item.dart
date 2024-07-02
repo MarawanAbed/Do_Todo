@@ -1,14 +1,25 @@
 import 'package:do_todo/custom_button.dart';
+import 'package:do_todo/get_tasks_cubit.dart';
 import 'package:do_todo/todo_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotesItems extends StatelessWidget {
+import 'database_services.dart';
+
+class NotesItems extends StatefulWidget {
   const NotesItems({
     super.key,
     required this.todoModel,
   });
 
   final TodoModel todoModel;
+
+  @override
+  State<NotesItems> createState() => _NotesItemsState();
+}
+
+class _NotesItemsState extends State<NotesItems> {
+  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,11 @@ class NotesItems extends StatelessWidget {
                 children: [
                   CustomButton(
                     title: 'Task Completed',
-                    onPressed: () {},
+                    onPressed: () {
+                      _databaseHelper.delete(widget.todoModel.id!);
+                      context.read<GetTasksCubit>().getTasks();
+                      Navigator.pop(context);
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -39,7 +54,12 @@ class NotesItems extends StatelessWidget {
                   ),
                   CustomButton(
                     title: 'Delete Task',
-                    onPressed: () {},
+                    onPressed: () {
+                      _showDialogConfirm().then((value) {
+                        Navigator.pop(context);
+                        context.read<GetTasksCubit>().getTasks();
+                      });
+                    },
                     color: Colors.red,
                   ),
                   const SizedBox(
@@ -69,7 +89,7 @@ class NotesItems extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Color(todoModel.color),
+          color: Color(widget.todoModel.color),
         ),
         child: Row(
           children: [
@@ -79,7 +99,7 @@ class NotesItems extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    todoModel.title,
+                    widget.todoModel.title,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -99,7 +119,7 @@ class NotesItems extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        '${todoModel.startTime} - ${todoModel.endTime}',
+                        '${widget.todoModel.startTime} - ${widget.todoModel.endTime}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -111,7 +131,7 @@ class NotesItems extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    todoModel.description,
+                    widget.todoModel.description,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -141,6 +161,33 @@ class NotesItems extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  _showDialogConfirm() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                _databaseHelper.delete(widget.todoModel.id!);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

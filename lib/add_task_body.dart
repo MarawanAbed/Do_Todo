@@ -263,7 +263,7 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                     'Daily',
                     'Weekly',
                     'Monthly',
-                    'Yearly',
+                    'none'
                   ],
                   selected: selectedRepeat,
                   onSelected: (value) {

@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 class TimeDate extends StatefulWidget {
   const TimeDate({
     super.key,
-    required this.selectedTime,
+    required this.selectedTime, required this.initialSelectedDate,
   });
 
   final Function(DateTime) selectedTime;
+  final DateTime initialSelectedDate;
 
   @override
   State<TimeDate> createState() => _TimeDateState();
@@ -20,10 +21,13 @@ class _TimeDateState extends State<TimeDate> {
       height: 100,
       child: DatePicker(
         DateTime.now(),
-        initialSelectedDate: DateTime.now(),
+        initialSelectedDate: widget.initialSelectedDate,
         selectionColor: Colors.blue,
         selectedTextColor: Colors.white,
-        onDateChange: widget.selectedTime,
+        onDateChange: (date)
+        {
+          widget.selectedTime(date);
+        },
       ),
     );
   }

@@ -96,7 +96,9 @@ class DatabaseHelper {
   Future<int> update(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnId];
-    return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
+    var update= await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
+    print('updated row id: $update');
+    return update;
   }
 
   Future<int> delete(int id) async {
