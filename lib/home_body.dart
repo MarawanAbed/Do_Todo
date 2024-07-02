@@ -15,6 +15,7 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+  DateTime selectedDate = DateTime.now(); // Initialize with today's date
   @override
   void initState() {
     context.read<GetTasksCubit>().getTasks();
@@ -39,7 +40,7 @@ class _HomeBodyState extends State<HomeBody> {
                 const SizedBox(
                   height: 20,
                 ),
-                BuildNotesItem(),
+                const BuildNotesItem(),
               ],
             ),
           ),
