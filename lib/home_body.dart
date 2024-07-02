@@ -15,7 +15,6 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  DateTime selectedDate = DateTime.now(); // Initialize with today's date
   @override
   void initState() {
     context.read<GetTasksCubit>().getTasks();
@@ -24,23 +23,23 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
+    return const Padding(
+      padding: EdgeInsets.all(10.0),
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomAppBar(),
-                const SizedBox(
+                CustomAppBar(),
+                SizedBox(
                   height: 20,
                 ),
-                const Header(),
-                const SizedBox(
+                Header(),
+                SizedBox(
                   height: 20,
                 ),
-                const BuildNotesItem(),
+                BuildNotesItem(),
               ],
             ),
           ),

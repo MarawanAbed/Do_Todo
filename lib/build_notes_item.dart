@@ -9,7 +9,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class BuildNotesItem extends StatefulWidget {
-  const BuildNotesItem({super.key,});
+  const BuildNotesItem({
+    super.key,
+  });
 
   @override
   State<BuildNotesItem> createState() => _BuildNotesItemState();
@@ -30,14 +32,14 @@ class _BuildNotesItemState extends State<BuildNotesItem> {
           return taskDate.day == selectedDate.day;
         case 'none':
         default:
-          return DateFormat('yyyy-MM-dd').format(taskDate) == DateFormat('yyyy-MM-dd').format(selectedDate);
+          return DateFormat('yyyy-MM-dd').format(taskDate) ==
+              DateFormat('yyyy-MM-dd').format(selectedDate);
       }
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<GetTasksCubit, GetTasksState>(
       builder: (context, state) {
         return state.when(
@@ -60,39 +62,39 @@ class _BuildNotesItemState extends State<BuildNotesItem> {
                 ),
                 filteredTasks.isEmpty
                     ? Center(
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        Assets.todo,
-                        height: 200,
-                        width: 200,
-                      ),
-                      const Text(
-                        'No Task Available',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              Assets.todo,
+                              height: 200,
+                              width: 200,
+                            ),
+                            const Text(
+                              'No Task Available',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                )
+                      )
                     : ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: filteredTasks.length,
-                      itemBuilder: (context, index) {
-                        var task = filteredTasks[index];
-                        return NotesItems(
-                          todoModel: task,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 20,
-                        );
-                      },
-                    ),
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: filteredTasks.length,
+                        itemBuilder: (context, index) {
+                          var task = filteredTasks[index];
+                          return NotesItems(
+                            todoModel: task,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            height: 20,
+                          );
+                        },
+                      ),
               ],
             );
           },
