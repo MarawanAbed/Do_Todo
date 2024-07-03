@@ -37,13 +37,66 @@ class NotificationService {
   }
 
   Future scheduleNotification(
-      {required int id ,
+      {required int id,
       String? title,
       String? body,
       String? payLoad,
+      required String repeat,
       required DateTime scheduledNotificationDateTime}) async {
     print('scheduleNotification $id');
-    return notificationsPlugin.zonedSchedule(
+    var androidDetails = const AndroidNotificationDetails(
+        'channelId', 'channelName',
+        importance: Importance.max);
+    var iOSDetails = const DarwinNotificationDetails();
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidDetails, iOS: iOSDetails);
+    if (repeat == 'Daily') {
+      return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } else if (repeat == 'Weekly') {
+      return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    } else if (repeat == 'Monthly') {
+      return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
+      );
+    } else {
+      return notificationsPlugin.zonedSchedule(
         id,
         title,
         body,
@@ -54,7 +107,9 @@ class NotificationService {
         await notificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    }
   }
 
   Future<void> cancelNotification(int id) async {
