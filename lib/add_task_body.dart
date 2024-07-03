@@ -217,37 +217,6 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                   height: 20,
                 ),
                 const Text(
-                  'Reminder',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ReminderDropButton(
-                  lists: const [
-                    5,
-                    10,
-                    15,
-                    20,
-                    25,
-                    30,
-                  ],
-                  hint: 'Select reminder',
-                  selected: selectedReminder,
-                  onSelected: (value) {
-                    setState(() {
-                      selectedReminder = value;
-                    });
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
                   'Repeat',
                   style: TextStyle(
                     color: Colors.black,
@@ -336,16 +305,21 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                                     '${dateController.text} ${startTimeController.text}');
                             DateTime endDate = DateFormat('yyyy-MM-dd HH:mm').parse(
                                 '${dateController.text} ${endTimeController.text}');
-                             NotificationService().scheduleNotification(
-                                id: value,
-                                title: '${titleController.text} is about to start.',
-                                body: descriptionController.text,
-                                scheduledNotificationDateTime: startDate);
-                             NotificationService().scheduleNotification(
-                                id: value + 1,
-                                title: '${titleController.text} is about to end.',
-                                body: descriptionController.text,
-                                scheduledNotificationDateTime: endDate);
+                            NotificationService().scheduleNotification(
+                              id: value,
+                              title:
+                                  '${titleController.text} is about to start.',
+                              body: descriptionController.text,
+                              scheduledNotificationDateTime: startDate,
+                              repeat: selectedRepeat,
+                            );
+                            NotificationService().scheduleNotification(
+                              id: value + 1,
+                              title: '${titleController.text} is about to end.',
+                              body: descriptionController.text,
+                              scheduledNotificationDateTime: endDate,
+                              repeat: selectedRepeat,
+                            );
                             Navigator.pop(context);
                             context.read<GetTasksCubit>().getTasks();
                           });
