@@ -1,5 +1,6 @@
 import 'package:do_todo/custom_button.dart';
 import 'package:do_todo/get_tasks_cubit.dart';
+import 'package:do_todo/notification_services.dart';
 import 'package:do_todo/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,7 @@ class _NotesItemsState extends State<NotesItems> {
                     onPressed: () {
                       _databaseHelper.delete(widget.todoModel.id!);
                       context.read<GetTasksCubit>().getTasks();
+                      NotificationService().cancelAllNotifications();
                       Navigator.pop(context);
                     },
                   ),
@@ -56,6 +58,7 @@ class _NotesItemsState extends State<NotesItems> {
                     title: 'Delete Task',
                     onPressed: () {
                       _showDialogConfirm().then((value) {
+                        NotificationService().cancelAllNotifications();
                         Navigator.pop(context);
                         context.read<GetTasksCubit>().getTasks();
                       });

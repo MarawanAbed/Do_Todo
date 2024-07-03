@@ -33,11 +33,6 @@
             </intent-filter>
         </activity>
         <!-- Define your receiver with android:exported -->
-        <receiver
-            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
-            android:exported="true">
-            <!-- Intent filters and other configurations if applicable -->
-        </receiver>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

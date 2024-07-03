@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'constant.dart';
+import 'notification_services.dart';
 
 class AddTaskBody extends StatefulWidget {
   const AddTaskBody({super.key});
@@ -259,12 +260,7 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                 ),
                 DropButton(
                   hint: 'Select repeat',
-                  lists: const [
-                    'Daily',
-                    'Weekly',
-                    'Monthly',
-                    'none'
-                  ],
+                  lists: const ['Daily', 'Weekly', 'Monthly', 'none'],
                   selected: selectedRepeat,
                   onSelected: (value) {
                     setState(() {
@@ -328,13 +324,28 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                           context
                               .read<AddTaskCubit>()
                               .addTask(task.toMap(), context)
-                              .then((_) {
+                              .then((value) async {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 backgroundColor: Colors.green,
                                 content: Text('Task added successfully'),
                               ),
                             );
+                            DateTime startDate = DateFormat('yyyy-MM-dd HH:mm')
+                                .parse(
+                                    '${dateController.text} ${startTimeController.text}');
+                            DateTime endDate = DateFormat('yyyy-MM-dd HH:mm').parse(
+                                '${dateController.text} ${endTimeController.text}');
+                             NotificationService().scheduleNotification(
+                                id: value,
+                                title: '${titleController.text} is about to start.',
+                                body: descriptionController.text,
+                                scheduledNotificationDateTime: startDate);
+                             NotificationService().scheduleNotification(
+                                id: value + 1,
+                                title: '${titleController.text} is about to end.',
+                                body: descriptionController.text,
+                                scheduledNotificationDateTime: endDate);
                             Navigator.pop(context);
                             context.read<GetTasksCubit>().getTasks();
                           });
