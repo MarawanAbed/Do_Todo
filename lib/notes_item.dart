@@ -40,6 +40,7 @@ class _NotesItemsState extends State<NotesItems> {
                       print(widget.todoModel.id!);
                       _databaseHelper.delete(widget.todoModel.id!);
                       NotificationService().cancelNotification(widget.todoModel.id!);
+                      NotificationService().cancelNotification(widget.todoModel.id!+1);
                       context.read<GetTasksCubit>().getTasks();
                       Navigator.pop(context);
                     },
@@ -60,6 +61,7 @@ class _NotesItemsState extends State<NotesItems> {
                     onPressed: () {
                       _showDialogConfirm().then((value) {
                         NotificationService().cancelNotification(widget.todoModel.id!);
+                        NotificationService().cancelNotification(widget.todoModel.id!+1);
                         Navigator.pop(context);
                         context.read<GetTasksCubit>().getTasks();
                       });

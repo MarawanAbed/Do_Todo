@@ -303,12 +303,20 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                             );
                             DateTime startDate = DateFormat('yyyy-MM-dd hh:mm a')
                                 .parse('${dateController.text} ${startTimeController.text}');
+                            DateTime endDate = DateFormat('yyyy-MM-dd hh:mm a')
+                                .parse('${dateController.text} ${endTimeController.text}');
 
-                              NotificationService().scheduleNotification(
+                                NotificationService().scheduleNotification(
                                 id: value,
                                 title: '${titleController.text} is about to start.',
                                 body: descriptionController.text,
                                 scheduledNotificationDateTime: startDate,
+                              );
+                              NotificationService().scheduleNotification(
+                                id: value + 1,
+                                title: '${titleController.text} is about to end.',
+                                body: descriptionController.text,
+                                scheduledNotificationDateTime: endDate,
                               );
                             Navigator.pop(context);
                             context.read<GetTasksCubit>().getTasks();
