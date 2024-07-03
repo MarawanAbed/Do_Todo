@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -37,76 +36,24 @@ class NotificationService {
         id, title, body, await notificationDetails());
   }
 
-  Future scheduleNotification({
-    int id = 0,
-    String? title,
-    String? body,
-    String? payLoad,
-    required DateTime scheduledNotificationDateTime,
-    String repeat = 'none', // Parameter to specify the repeat interval
-  }) async {
-    debugPrint('scheduledNotificationDateTime: $scheduledNotificationDateTime');
-    var androidDetails = const AndroidNotificationDetails(
-        'channelId', 'channelName',
-        importance: Importance.max);
-    var iOSDetails = const DarwinNotificationDetails();
-    var platformChannelSpecifics =
-        NotificationDetails(android: androidDetails, iOS: iOSDetails);
-
-    tz.TZDateTime scheduledDate =
-        tz.TZDateTime.from(scheduledNotificationDateTime, tz.local);
-
-    if (repeat == 'Daily') {
-      return notificationsPlugin.zonedSchedule(
+  Future scheduleNotification(
+      {int id = 0,
+      String? title,
+      String? body,
+      String? payLoad,
+      required DateTime scheduledNotificationDateTime}) async {
+    return notificationsPlugin.zonedSchedule(
         id,
         title,
         body,
-        scheduledDate,
-        platformChannelSpecifics,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        await notificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time, // Daily repeat
-      );
-    } else if (repeat == 'Weekly') {
-      return notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents:
-            DateTimeComponents.dayOfWeekAndTime, // Weekly repeat
-      );
-    } else if (repeat == 'Monthly') {
-      return notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents:
-            DateTimeComponents.dayOfMonthAndTime, // Monthly repeat
-      );
-    } else {
-      // Schedule a non-repeating notification
-      return notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-      );
-    }
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   Future<void> cancelNotification(int id) async {
