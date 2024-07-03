@@ -37,11 +37,12 @@ class NotificationService {
   }
 
   Future scheduleNotification(
-      {int id = 0,
+      {required int id ,
       String? title,
       String? body,
       String? payLoad,
       required DateTime scheduledNotificationDateTime}) async {
+    print('scheduleNotification $id');
     return notificationsPlugin.zonedSchedule(
         id,
         title,
@@ -57,7 +58,9 @@ class NotificationService {
   }
 
   Future<void> cancelNotification(int id) async {
+    print('cancelNotification $id');
     await notificationsPlugin.cancel(id);
+    print('cancelNotification done $id');
   }
 
   Future<void> cancelAllNotifications() async {

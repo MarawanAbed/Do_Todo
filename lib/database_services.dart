@@ -79,12 +79,8 @@ class DatabaseHelper {
   Future<int> insert(Map<String, dynamic> row) async {
     Database db = await instance.database;
     print('inserting row');
-    db.insert(table, row).then((value)
-    {
-      print('inserted row id: $value');
-      return value;
-    });
-    return 0;
+   var id=await db.insert(table, row);
+    return id;
   }
 
 

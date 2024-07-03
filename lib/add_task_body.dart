@@ -294,6 +294,7 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                               .read<AddTaskCubit>()
                               .addTask(task.toMap(), context)
                               .then((value) async {
+                                print(value);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 backgroundColor: Colors.green,
@@ -302,24 +303,13 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                             );
                             DateTime startDate = DateFormat('yyyy-MM-dd hh:mm a')
                                 .parse('${dateController.text} ${startTimeController.text}');
-                            print('Parsed Start DateTime: $startDate');
 
-                            if (startDate.isAfter(DateTime.now())) {
                               NotificationService().scheduleNotification(
-                                title:
-                                    '${titleController.text} is about to start.',
+                                id: value,
+                                title: '${titleController.text} is about to start.',
                                 body: descriptionController.text,
                                 scheduledNotificationDateTime: startDate,
                               );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  backgroundColor: Colors.red,
-                                  content:
-                                      Text('Start date must be in the future'),
-                                ),
-                              );
-                            }
                             Navigator.pop(context);
                             context.read<GetTasksCubit>().getTasks();
                           });
