@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import 'Do_Todo/presentation/pages/notification/notification_page.dart';
+import 'do_todo.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -20,7 +26,27 @@ class NotificationService {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {});
+            (NotificationResponse notificationResponse) async {
+      if (notificationResponse.payload != null) {
+        final payloadData = jsonDecode(notificationResponse.payload!);
+        List<String> keywords = ['is about to end.', 'is about to start.'];
+        // Filter the title
+        String filteredTitle = filterTitle(payloadData['title'], keywords);
+
+        String body = payloadData['body'];
+        String startTime = payloadData['formattedStartTime'];
+        String endTime = payloadData['formattedEndTime'];
+
+        navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => NotificationPage(
+            title: filteredTitle, // Use the filtered title
+            body: body,
+            startTime: startTime,
+            endTime: endTime,
+          ),
+        ));
+      }
+    });
   }
 
   notificationDetails() {
@@ -36,14 +62,26 @@ class NotificationService {
         id, title, body, await notificationDetails());
   }
 
-  Future scheduleNotification(
-      {required int id,
-      String? title,
-      String? body,
-      String? payLoad,
-      required String repeat,
-      required DateTime scheduledNotificationDateTime}) async {
+  Future scheduleNotification({
+    required int id,
+    String? title,
+    String? body,
+    String? payLoad,
+    required String repeat,
+    required DateTime scheduledNotificationDateTime,
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    String formattedStartTime=startTime.toIso8601String();
+    String formattedEndTime=endTime.toIso8601String();
     print('scheduleNotification $id');
+    String payload = jsonEncode({
+      'title': title,
+      'body': body,
+      'formattedStartTime': formattedStartTime,
+      'formattedEndTime': formattedEndTime,
+    });
+
     var androidDetails = const AndroidNotificationDetails(
         'channelId', 'channelName',
         importance: Importance.max);
@@ -59,6 +97,7 @@ class NotificationService {
           scheduledNotificationDateTime,
           tz.local,
         ),
+        payload: payload,
         platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
@@ -70,6 +109,7 @@ class NotificationService {
         id,
         title,
         body,
+        payload: payload,
         tz.TZDateTime.from(
           scheduledNotificationDateTime,
           tz.local,
@@ -84,6 +124,7 @@ class NotificationService {
       return notificationsPlugin.zonedSchedule(
         id,
         title,
+        payload: payload,
         body,
         tz.TZDateTime.from(
           scheduledNotificationDateTime,
@@ -100,6 +141,7 @@ class NotificationService {
         id,
         title,
         body,
+        payload: payload,
         tz.TZDateTime.from(
           scheduledNotificationDateTime,
           tz.local,
@@ -121,4 +163,30 @@ class NotificationService {
   Future<void> cancelAllNotifications() async {
     await notificationsPlugin.cancelAll();
   }
+
+  Future<void> updateSchedulingNotification(
+      {required int id,
+      String? title,
+      String? body,
+      String? payLoad,
+      required String repeat,
+      required DateTime scheduledNotificationDateTime}) async {
+    await cancelNotification(id);
+    // await scheduleNotification(
+    //   id: id,
+    //   repeat: repeat,
+    //   title: title,
+    //   body: body,
+    //   scheduledNotificationDateTime: scheduledNotificationDateTime,
+    // );
+  }
+}
+String filterTitle(String fullTitle, List<String> keywords) {
+  String filteredTitle = fullTitle;
+  for (String keyword in keywords) {
+    if (filteredTitle.contains(keyword)) {
+      filteredTitle = filteredTitle.replaceAll(keyword, '').trim();
+    }
+  }
+  return filteredTitle;
 }

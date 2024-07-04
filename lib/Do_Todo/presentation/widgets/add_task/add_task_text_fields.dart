@@ -60,7 +60,7 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
               showDatePicker(
                 context: context,
                 initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
+                firstDate: DateTime.now(),
                 lastDate: DateTime(2025),
               ).then((value) {
                 print(value.toString());

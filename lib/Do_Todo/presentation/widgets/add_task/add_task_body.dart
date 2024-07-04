@@ -144,6 +144,8 @@ class _AddTaskBodyState extends State<AddTaskBody> {
           body: cubit.descriptionController.text,
           scheduledNotificationDateTime: startDate,
           repeat: selectedRepeat,
+          endTime: endDate,
+          startTime: startDate,
         );
         NotificationService().scheduleNotification(
           id: value + 1,
@@ -151,6 +153,8 @@ class _AddTaskBodyState extends State<AddTaskBody> {
           body: cubit.descriptionController.text,
           scheduledNotificationDateTime: endDate,
           repeat: selectedRepeat,
+          endTime: endDate,
+          startTime: startDate,
         );
         Navigator.pop(context);
         context.read<GetTasksCubit>().getTasks();
