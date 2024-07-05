@@ -9,11 +9,11 @@ import 'do_todo.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings('@mipmap/ic_launcher');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -27,26 +27,27 @@ class NotificationService {
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
-      if (notificationResponse.payload != null) {
-        final payloadData = jsonDecode(notificationResponse.payload!);
-        List<String> keywords = ['is about to end.', 'is about to start.'];
-        // Filter the title
-        String filteredTitle = filterTitle(payloadData['title'], keywords);
+          if (notificationResponse.payload != null) {
+            final payloadData = jsonDecode(notificationResponse.payload!);
+            List<String> keywords = ['is about to end.', 'is about to start.'];
+            // Filter the title
+            String filteredTitle = filterTitle(payloadData['title'], keywords);
 
-        String body = payloadData['body'];
-        String startTime = payloadData['formattedStartTime'];
-        String endTime = payloadData['formattedEndTime'];
+            String body = payloadData['body'];
+            String startTime = payloadData['formattedStartTime'];
+            String endTime = payloadData['formattedEndTime'];
 
-        navigatorKey.currentState?.push(MaterialPageRoute(
-          builder: (context) => NotificationPage(
-            title: filteredTitle, // Use the filtered title
-            body: body,
-            startTime: startTime,
-            endTime: endTime,
-          ),
-        ));
-      }
-    });
+            navigatorKey.currentState?.push(MaterialPageRoute(
+              builder: (context) =>
+                  NotificationPage(
+                    title: filteredTitle, // Use the filtered title
+                    body: body,
+                    startTime: startTime,
+                    endTime: endTime,
+                  ),
+            ));
+          }
+        });
   }
 
   notificationDetails() {
@@ -66,14 +67,13 @@ class NotificationService {
     required int id,
     String? title,
     String? body,
-    String? payLoad,
     required String repeat,
     required DateTime scheduledNotificationDateTime,
     required DateTime startTime,
     required DateTime endTime,
   }) async {
-    String formattedStartTime=startTime.toIso8601String();
-    String formattedEndTime=endTime.toIso8601String();
+    String formattedStartTime = startTime.toIso8601String();
+    String formattedEndTime = endTime.toIso8601String();
     print('scheduleNotification $id');
     String payload = jsonEncode({
       'title': title,
@@ -87,7 +87,7 @@ class NotificationService {
         importance: Importance.max);
     var iOSDetails = const DarwinNotificationDetails();
     var platformChannelSpecifics =
-        NotificationDetails(android: androidDetails, iOS: iOSDetails);
+    NotificationDetails(android: androidDetails, iOS: iOSDetails);
     if (repeat == 'Daily') {
       return notificationsPlugin.zonedSchedule(
         id,
@@ -101,7 +101,7 @@ class NotificationService {
         platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+        UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
     } else if (repeat == 'Weekly') {
@@ -117,7 +117,7 @@ class NotificationService {
         platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+        UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
     } else if (repeat == 'Monthly') {
@@ -133,7 +133,7 @@ class NotificationService {
         platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+        UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       );
     } else {
@@ -149,7 +149,7 @@ class NotificationService {
         await notificationDetails(),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+        UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
@@ -164,23 +164,28 @@ class NotificationService {
     await notificationsPlugin.cancelAll();
   }
 
-  Future<void> updateSchedulingNotification(
-      {required int id,
-      String? title,
-      String? body,
-      String? payLoad,
-      required String repeat,
-      required DateTime scheduledNotificationDateTime}) async {
+  Future<void> updateSchedulingNotification({required int id,
+    String? title,
+    String? body,
+    String? payLoad,
+    required String repeat,
+    required DateTime scheduledNotificationDateTime,
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
     await cancelNotification(id);
-    // await scheduleNotification(
-    //   id: id,
-    //   repeat: repeat,
-    //   title: title,
-    //   body: body,
-    //   scheduledNotificationDateTime: scheduledNotificationDateTime,
-    // );
+    await scheduleNotification(
+        id: id,
+        repeat: repeat,
+        title: title,
+        body: body,
+        scheduledNotificationDateTime: scheduledNotificationDateTime,
+        startTime:startTime,
+        endTime:endTime
+    );
   }
 }
+
 String filterTitle(String fullTitle, List<String> keywords) {
   String filteredTitle = fullTitle;
   for (String keyword in keywords) {

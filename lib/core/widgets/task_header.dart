@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AddTaskHeader extends StatelessWidget {
-  const AddTaskHeader({
-    super.key,
+class TaskHeader extends StatelessWidget {
+  const TaskHeader({
+    super.key, required this.title, required this.onBack,
   });
+  final String title;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +14,15 @@ class AddTaskHeader extends StatelessWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: onBack,
         ),
         const SizedBox(
           height: 20,
         ),
-        const Center(
+         Center(
           child: Text(
-            'Add Task',
-            style: TextStyle(
+            title,
+            style: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 25,

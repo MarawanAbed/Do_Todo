@@ -7,7 +7,7 @@ class TextFields extends StatelessWidget {
     required this.controller,
     required this.hint,
     this.readable,
-    this.suffixIcon,
+    this.suffixIcon,  this.onChanged,
   });
 
   final String title;
@@ -15,7 +15,7 @@ class TextFields extends StatelessWidget {
   final TextEditingController controller;
   final bool? readable;
   final Widget? suffixIcon;
-
+  final VoidCallback? onChanged;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +33,9 @@ class TextFields extends StatelessWidget {
           height: 10,
         ),
         TextFormField(
+          onChanged: (value) {
+            onChanged!();
+          },
           readOnly: readable ?? false,
           validator: (value) {
             if (value!.isEmpty) {

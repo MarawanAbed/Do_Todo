@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskTextFields extends StatefulWidget {
-  const AddTaskTextFields({super.key});
-
+  const AddTaskTextFields({super.key,  required this.onChanged});
+  final VoidCallback onChanged;
   @override
   State<AddTaskTextFields> createState() => _AddTaskTextFieldsState();
 }
@@ -38,6 +38,7 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
           title: 'Title',
           controller: titleController,
           hint: 'Enter title',
+          onChanged: widget.onChanged,
         ),
         const SizedBox(
           height: 20,
@@ -46,6 +47,8 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
           title: 'Description',
           controller: descriptionController,
           hint: 'Enter description',
+          onChanged: widget.onChanged,
+
         ),
         const SizedBox(
           height: 20,
@@ -67,6 +70,8 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
                 setState(() {
                   dateController.text =
                       DateFormat('yyyy-MM-dd').format(value!);
+                  widget.onChanged();
+
                 });
               });
             },
@@ -95,6 +100,8 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
                         setState(() {
                           startTimeController.text =
                               value!.format(context);
+                          widget.onChanged();
+
                         });
                       },
                     );
@@ -123,6 +130,7 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
                         setState(() {
                           endTimeController.text =
                               value!.format(context);
+                          widget.onChanged();
                         });
                       },
                     );
