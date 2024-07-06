@@ -29,6 +29,7 @@ class _DropButtonState extends State<DropButton> {
 
   @override
   Widget build(BuildContext context) {
+    var dark=Theme.of(context).brightness==Brightness.dark;
     return DropdownButtonFormField2<String>(
       isExpanded: true,
       decoration: InputDecoration(
@@ -39,15 +40,16 @@ class _DropButtonState extends State<DropButton> {
       ),
       hint: Text(
         widget.hint,
-        style: const TextStyle(fontSize: 14),
+        style:  TextStyle(fontSize: 14,color: dark?Colors.white:Colors.black),
       ),
       items: widget.lists
           .map((item) => DropdownMenuItem<String>(
         value: item,
         child: Text(
           item,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 14,
+            color: dark?Colors.white:Colors.black,
           ),
         ),
       ))
@@ -70,10 +72,10 @@ class _DropButtonState extends State<DropButton> {
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),
-      iconStyleData: const IconStyleData(
+      iconStyleData:  IconStyleData(
         icon: Icon(
           Icons.arrow_drop_down,
-          color: Colors.black45,
+          color:dark?Colors.white: Colors.black45,
         ),
         iconSize: 24,
       ),

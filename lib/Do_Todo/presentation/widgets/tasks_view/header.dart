@@ -9,13 +9,14 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Expanded(
           child: Text(
             DateFormat('MMMM d,yyyy EEEE').format(DateTime.now()),
-            style: const TextStyle(
-              color: Colors.black,
+            style:  TextStyle(
+              color:dark? Colors.white : Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),

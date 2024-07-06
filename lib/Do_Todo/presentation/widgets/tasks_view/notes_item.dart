@@ -20,6 +20,7 @@ class NotesItems extends StatefulWidget {
 class _NotesItemsState extends State<NotesItems> {
   @override
   Widget build(BuildContext context) {
+    var dark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         showBottomSheet(

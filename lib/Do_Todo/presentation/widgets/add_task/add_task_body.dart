@@ -64,6 +64,7 @@ class _AddTaskBodyState extends State<AddTaskBody> {
 
   @override
   Widget build(BuildContext context) {
+    var dark = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Form(
@@ -79,15 +80,16 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                     TaskHeader(
                       title: 'Add Task',
                       onBack: _handleBack,
+                      dark:dark
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     AddTaskTextFields(onChanged: _onChange),
-                    const Text(
+                     Text(
                       'Repeat',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: dark?Colors.white:Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),
@@ -109,10 +111,10 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                     Text(
                       'Color',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: dark?Colors.white:Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),

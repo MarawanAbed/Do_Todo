@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white.withOpacity(0.9),
         body: const HomeBody(
         ),
       ),

@@ -11,9 +11,8 @@ class AddTaskPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AddTasksCubit>(),
-      child: Scaffold(
-        backgroundColor: Colors.white.withOpacity(0.9),
-        body: const AddTaskBody(),
+      child: const Scaffold(
+        body: AddTaskBody(),
       ),
     );
   }

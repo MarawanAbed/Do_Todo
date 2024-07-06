@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
 import 'package:do_todo/core/services/notification_services.dart';
 import 'package:do_todo/do_todo.dart';
 import 'package:flutter/foundation.dart';
@@ -23,10 +24,14 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
     getIt<DatabaseHelper>().initDesktopDatabase();
   }
+  final darkThemeCubit = getIt<DarkThemeCubit>();
+  await darkThemeCubit.getSavedTheme();
   getIt<DatabaseHelper>().initDatabase();
   Bloc.observer = MyBlocObserver();
   runApp(DevicePreview(
     enabled: !kReleaseMode,
-    builder: (context) => const DoTodo(),
+    builder: (context) =>  DoTodo(
+      darkThemeCubit: darkThemeCubit,
+    ),
   ));
 }

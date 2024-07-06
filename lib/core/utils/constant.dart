@@ -8,3 +8,7 @@ List<Color> backgroundColors = [
   const Color(0xFFC05926), // pale orange
   const Color(0xFFC0262A), // pale red
 ];
+
+const String darkKey='dark';
+
+

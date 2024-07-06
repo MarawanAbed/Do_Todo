@@ -22,7 +22,6 @@ class _EditTaskBodyState extends State<EditTaskBody> {
   late ValueNotifier<Color?> selectedColor;
   late String selectedRepeat;
 
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -33,105 +32,104 @@ class _EditTaskBodyState extends State<EditTaskBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TaskHeader(
-                    title: 'Edit Task',
-                    onBack: () {
-                      Navigator.pop(context);
-                    },
+    var dark=Theme.of(context).brightness==Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TaskHeader(
+                  dark: true,
+                  title: 'Edit Task',
+                  onBack: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                EditTaskTextFields(
+                  todoModel: widget.todoModel,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                 Text(
+                  'Repeat',
+                  style: TextStyle(
+                    color: dark?Colors.white:Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
-                  const SizedBox(
-                    height: 20,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                DropButton(
+                  hint: selectedRepeat,
+                  lists: const ['Daily', 'Weekly', 'Monthly', 'none'],
+                  selected: selectedRepeat,
+                  onSelected: (value) {
+                    setState(() {
+                      selectedRepeat = value;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                 Text(
+                  'Color',
+                  style: TextStyle(
+                    color: dark?Colors.white:Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
-                  EditTaskTextFields(
-                    todoModel: widget.todoModel,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    'Repeat',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    ColorsChoose(selectedColor: selectedColor),
+                    const SizedBox(
+                      width: 20,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  DropButton(
-                    hint: selectedRepeat,
-                    lists: const ['Daily', 'Weekly', 'Monthly', 'none'],
-                    selected: selectedRepeat,
-                    onSelected: (value) {
-                      setState(() {
-                        selectedRepeat = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    'Color',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      ColorsChoose(selectedColor: selectedColor),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                          onTap: () {
-                            _updateTask();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue,
-                            ),
-                            child: const Text(
-                              'Edit Task',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          _updateTask();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blue,
+                          ),
+                          child: const Text(
+                            'Edit Task',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
                         ),
                       ),
-                      const EditTaskBlocListener(),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const EditTaskBlocListener(),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

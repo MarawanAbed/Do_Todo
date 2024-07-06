@@ -17,21 +17,30 @@ import 'package:do_todo/Do_Todo/domain/use_cases/update_notification_use_case.da
 import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
+import 'package:do_todo/core/helpers/cached.dart';
 import 'package:do_todo/core/services/database_services.dart';
 import 'package:do_todo/core/services/notification_services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var getIt = GetIt.instance;
 
-void setupDi() {
+void setupDi() async{
   final FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   getIt.registerLazySingleton(() => notificationsPlugin);
 
-  ///services
   getIt.registerLazySingleton<NotificationService>(
-      () => NotificationService(notificationsPlugin: getIt()));
+          () => NotificationService(notificationsPlugin: getIt()));
+  getIt.registerLazySingleton<SharedPreCacheHelper>(
+          () => SharedPreCacheHelper(getIt<SharedPreferences>()));
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+
+  ///services
+
   getIt.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   ///data sources
@@ -70,7 +79,8 @@ void setupDi() {
       () => DeleteTasksUseCase(getIt()));
 
   ///cubit
-  getIt.registerFactory(() => AddTasksCubit(getIt(), getIt()));
-  getIt.registerFactory(() => GetTasksCubit(getIt(), getIt(), getIt()));
-  getIt.registerFactory(() => EditTaskCubit(getIt(), getIt()));
+  getIt.registerFactory<AddTasksCubit>(() => AddTasksCubit(getIt(), getIt()));
+  getIt.registerFactory<GetTasksCubit>(() => GetTasksCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory<EditTaskCubit>(() => EditTaskCubit(getIt(), getIt()));
+  getIt.registerFactory<DarkThemeCubit>(() => DarkThemeCubit());
 }

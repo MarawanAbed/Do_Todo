@@ -18,13 +18,14 @@ class TextFields extends StatelessWidget {
   final VoidCallback? onChanged;
   @override
   Widget build(BuildContext context) {
+    var dark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: dark?Colors.white:Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
@@ -46,6 +47,9 @@ class TextFields extends StatelessWidget {
           controller: controller,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: TextStyle(
+              color: dark?Colors.white:Colors.black,
+            ),
             suffixIcon: suffixIcon,
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
