@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'Do_Todo/presentation/pages/notification/notification_page.dart';
-import 'do_todo.dart';
+import '../../Do_Todo/presentation/pages/notification/notification_page.dart';
+import '../../do_todo.dart';
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin notificationsPlugin;
+
+  NotificationService({required this.notificationsPlugin});
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
@@ -65,8 +66,8 @@ class NotificationService {
 
   Future scheduleNotification({
     required int id,
-    String? title,
-    String? body,
+    required String title,
+    required String body,
     required String repeat,
     required DateTime scheduledNotificationDateTime,
     required DateTime startTime,
@@ -165,8 +166,8 @@ class NotificationService {
   }
 
   Future<void> updateSchedulingNotification({required int id,
-    String? title,
-    String? body,
+    required String title,
+    required String body,
     String? payLoad,
     required String repeat,
     required DateTime scheduledNotificationDateTime,

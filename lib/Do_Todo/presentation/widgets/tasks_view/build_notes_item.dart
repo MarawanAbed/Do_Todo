@@ -1,12 +1,13 @@
-import 'package:do_todo/generated/assets.dart';
-import 'package:do_todo/get_tasks_cubit.dart';
-import 'package:do_todo/notes_item.dart';
-import 'package:do_todo/time_date.dart';
-import 'package:do_todo/todo_model.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/widgets/tasks_view/time_date.dart';
+import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../core/assets/generated/assets.dart';
+import 'notes_item.dart';
 
 class BuildNotesItem extends StatefulWidget {
   const BuildNotesItem({
@@ -98,7 +99,7 @@ class _BuildNotesItemState extends State<BuildNotesItem> {
               ],
             );
           },
-          failure: (message) => Center(
+          error: (message) => Center(
             child: Text(message),
           ),
         );

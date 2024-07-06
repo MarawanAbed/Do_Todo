@@ -1,61 +1,59 @@
-import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/core/widgets/text_fields.dart';
+import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class AddTaskTextFields extends StatefulWidget {
-  const AddTaskTextFields({super.key,  required this.onChanged});
-  final VoidCallback onChanged;
+class EditTaskTextFields extends StatefulWidget {
+  const EditTaskTextFields({super.key, required this.todoModel});
+
+  final TodoModel todoModel;
+
   @override
-  State<AddTaskTextFields> createState() => _AddTaskTextFieldsState();
+  State<EditTaskTextFields> createState() => _EditTaskTextFieldsState();
 }
 
-class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
-  late TextEditingController startTimeController;
-  late TextEditingController endTimeController;
-  late TextEditingController dateController;
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
-
-
+class _EditTaskTextFieldsState extends State<EditTaskTextFields> {
   @override
   void initState() {
-    var cubit=context.read<AddTasksCubit>();
-    startTimeController = cubit.startTimeController;
-    endTimeController = cubit.endTimeController;
-    dateController = cubit.dateController;
-    titleController = cubit.titleController;
-    descriptionController = cubit.descriptionController;
+    var cubit = context.read<EditTaskCubit>();
+    cubit.startTimeController =
+        TextEditingController(text: widget.todoModel.startTime);
+    cubit.endTimeController =
+        TextEditingController(text: widget.todoModel.endTime);
+    cubit.dateController = TextEditingController(text: widget.todoModel.date);
+    cubit.titleController = TextEditingController(text: widget.todoModel.title);
+    cubit.descriptionController =
+        TextEditingController(text: widget.todoModel.description);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    var cubit = context.read<EditTaskCubit>();
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFields(
           title: 'Title',
-          controller: titleController,
+          controller: cubit.titleController,
           hint: 'Enter title',
-          onChanged: widget.onChanged,
         ),
         const SizedBox(
           height: 20,
         ),
         TextFields(
           title: 'Description',
-          controller: descriptionController,
+          controller: cubit.descriptionController,
           hint: 'Enter description',
-          onChanged: widget.onChanged,
-
         ),
         const SizedBox(
           height: 20,
         ),
         TextFields(
           title: 'Date',
-          controller: dateController,
+          controller: cubit.dateController,
           hint: 'Enter date',
           readable: true,
           suffixIcon: IconButton(
@@ -68,10 +66,8 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
               ).then((value) {
                 print(value.toString());
                 setState(() {
-                  dateController.text =
+                  cubit.dateController.text =
                       DateFormat('yyyy-MM-dd').format(value!);
-                  widget.onChanged();
-
                 });
               });
             },
@@ -86,7 +82,7 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
             Expanded(
               child: TextFields(
                 title: 'Start Time',
-                controller: startTimeController,
+                controller: cubit.startTimeController,
                 hint: 'Enter start time',
                 readable: true,
                 suffixIcon: IconButton(
@@ -95,13 +91,12 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
                       context: context,
                       initialTime: TimeOfDay.now(),
                     ).then(
-                          (value) {
+                      (value) {
                         print(value?.format(context));
                         setState(() {
-                          startTimeController.text =
+                          cubit.startTimeController.text =
                               value!.format(context);
-                          widget.onChanged();
-
+                          cubit.isStartTimeSelected = true;
                         });
                       },
                     );
@@ -116,7 +111,7 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
             Expanded(
               child: TextFields(
                 title: 'End Time',
-                controller: endTimeController,
+                controller: cubit.endTimeController,
                 hint: 'Enter end time',
                 readable: true,
                 suffixIcon: IconButton(
@@ -125,12 +120,11 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
                       context: context,
                       initialTime: TimeOfDay.now(),
                     ).then(
-                          (value) {
+                      (value) {
                         print(value?.format(context));
                         setState(() {
-                          endTimeController.text =
-                              value!.format(context);
-                          widget.onChanged();
+                          cubit.endTimeController.text = value!.format(context);
+                          cubit.isEndTimeSelected = true;
                         });
                       },
                     );

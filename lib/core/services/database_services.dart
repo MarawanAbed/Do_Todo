@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseHelper {
@@ -13,9 +12,7 @@ class DatabaseHelper {
 
   static const columnId = '_id';
   static const columnTitle = 'title';
-
   static const columnDescription = 'description';
-
   static const columnDate = 'date';
   static const columnStartTime = 'start_time';
   static const columnEndTime = 'end_time';
@@ -24,41 +21,24 @@ class DatabaseHelper {
   static const columnColor = 'color';
   static const columnIsCompleted = 'is_completed';
 
-  //i make that private constructor to make sure that the class is singleton
-  //so we can't create an object from it from outside the class
-  //ensures that there is only one instance of DatabaseHelper throughout your application
-  //this is important because you don't want to have multiple instances of the database helper class
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  final DatabaseFactory databaseFactory = databaseFactoryFfi;
 
-  static Database? _database;
-  static DatabaseFactory databaseFactory = databaseFactoryFfi;
-
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
-  }
-
-
-  Future<Database> _initDatabase() async {
+  Future<Database> initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: _onCreate);
+    return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
   }
+
   Future<Database> initDesktopDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
-    return await databaseFactory.openDatabase(path,options: OpenDatabaseOptions(
+    return await databaseFactory.openDatabase(path, options: OpenDatabaseOptions(
       version: _databaseVersion,
       onCreate: _onCreate,
     ));
   }
 
-  Future _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE $table (
       $columnId INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -77,28 +57,27 @@ class DatabaseHelper {
   }
 
   Future<int> insert(Map<String, dynamic> row) async {
-    Database db = await instance.database;
+    Database db = await initDatabase(); // Example usage to ensure database is initialized
     print('inserting row');
-   var id=await db.insert(table, row);
+    var id = await db.insert(table, row);
     return id;
   }
 
-
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database db = await instance.database;
+    Database db = await initDatabase(); // Example usage to ensure database is initialized
     return await db.query(table);
   }
 
   Future<int> update(Map<String, dynamic> row) async {
-    Database db = await instance.database;
+    Database db = await initDatabase(); // Example usage to ensure database is initialized
     int id = row[columnId];
-    var update= await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
+    var update = await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
     print('updated row id: $update');
     return update;
   }
 
   Future<int> delete(int id) async {
-    Database db = await instance.database;
+    Database db = await initDatabase();
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 }

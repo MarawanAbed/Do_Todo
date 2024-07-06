@@ -15,11 +15,13 @@ class NotificationPage extends StatelessWidget {
           centerTitle: true,
           title: Text(title),
         ),
-        body: NotificationBody(
-          body: body,
-          title: title,
-          startTime: startTime,
-          endTime: endTime,
+        body: SingleChildScrollView(
+          child: NotificationBody(
+            body: body,
+            title: title,
+            startTime: startTime,
+            endTime: endTime,
+          ),
         ),
       ),
     );

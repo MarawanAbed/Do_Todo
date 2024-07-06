@@ -21,7 +21,7 @@ mixin _$GetTasksState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<TodoModel> tasks) loaded,
-    required TResult Function(String message) failure,
+    required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,7 +29,7 @@ mixin _$GetTasksState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(List<TodoModel> tasks)? loaded,
-    TResult? Function(String message)? failure,
+    TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -37,7 +37,7 @@ mixin _$GetTasksState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<TodoModel> tasks)? loaded,
-    TResult Function(String message)? failure,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ mixin _$GetTasksState {
     required TResult Function(_Initial value) initial,
     required TResult Function(Loading value) loading,
     required TResult Function(Loaded value) loaded,
-    required TResult Function(Failure value) failure,
+    required TResult Function(Error value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -54,7 +54,7 @@ mixin _$GetTasksState {
     TResult? Function(_Initial value)? initial,
     TResult? Function(Loading value)? loading,
     TResult? Function(Loaded value)? loaded,
-    TResult? Function(Failure value)? failure,
+    TResult? Function(Error value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -62,7 +62,7 @@ mixin _$GetTasksState {
     TResult Function(_Initial value)? initial,
     TResult Function(Loading value)? loading,
     TResult Function(Loaded value)? loaded,
-    TResult Function(Failure value)? failure,
+    TResult Function(Error value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,7 +127,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<TodoModel> tasks) loaded,
-    required TResult Function(String message) failure,
+    required TResult Function(String message) error,
   }) {
     return initial();
   }
@@ -138,7 +138,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(List<TodoModel> tasks)? loaded,
-    TResult? Function(String message)? failure,
+    TResult? Function(String message)? error,
   }) {
     return initial?.call();
   }
@@ -149,7 +149,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<TodoModel> tasks)? loaded,
-    TResult Function(String message)? failure,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -164,7 +164,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Initial value) initial,
     required TResult Function(Loading value) loading,
     required TResult Function(Loaded value) loaded,
-    required TResult Function(Failure value) failure,
+    required TResult Function(Error value) error,
   }) {
     return initial(this);
   }
@@ -175,7 +175,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Initial value)? initial,
     TResult? Function(Loading value)? loading,
     TResult? Function(Loaded value)? loaded,
-    TResult? Function(Failure value)? failure,
+    TResult? Function(Error value)? error,
   }) {
     return initial?.call(this);
   }
@@ -186,7 +186,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Initial value)? initial,
     TResult Function(Loading value)? loading,
     TResult Function(Loaded value)? loaded,
-    TResult Function(Failure value)? failure,
+    TResult Function(Error value)? error,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -241,7 +241,7 @@ class _$LoadingImpl implements Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<TodoModel> tasks) loaded,
-    required TResult Function(String message) failure,
+    required TResult Function(String message) error,
   }) {
     return loading();
   }
@@ -252,7 +252,7 @@ class _$LoadingImpl implements Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(List<TodoModel> tasks)? loaded,
-    TResult? Function(String message)? failure,
+    TResult? Function(String message)? error,
   }) {
     return loading?.call();
   }
@@ -263,7 +263,7 @@ class _$LoadingImpl implements Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<TodoModel> tasks)? loaded,
-    TResult Function(String message)? failure,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -278,7 +278,7 @@ class _$LoadingImpl implements Loading {
     required TResult Function(_Initial value) initial,
     required TResult Function(Loading value) loading,
     required TResult Function(Loaded value) loaded,
-    required TResult Function(Failure value) failure,
+    required TResult Function(Error value) error,
   }) {
     return loading(this);
   }
@@ -289,7 +289,7 @@ class _$LoadingImpl implements Loading {
     TResult? Function(_Initial value)? initial,
     TResult? Function(Loading value)? loading,
     TResult? Function(Loaded value)? loaded,
-    TResult? Function(Failure value)? failure,
+    TResult? Function(Error value)? error,
   }) {
     return loading?.call(this);
   }
@@ -300,7 +300,7 @@ class _$LoadingImpl implements Loading {
     TResult Function(_Initial value)? initial,
     TResult Function(Loading value)? loading,
     TResult Function(Loaded value)? loaded,
-    TResult Function(Failure value)? failure,
+    TResult Function(Error value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -387,7 +387,7 @@ class _$LoadedImpl implements Loaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<TodoModel> tasks) loaded,
-    required TResult Function(String message) failure,
+    required TResult Function(String message) error,
   }) {
     return loaded(tasks);
   }
@@ -398,7 +398,7 @@ class _$LoadedImpl implements Loaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(List<TodoModel> tasks)? loaded,
-    TResult? Function(String message)? failure,
+    TResult? Function(String message)? error,
   }) {
     return loaded?.call(tasks);
   }
@@ -409,7 +409,7 @@ class _$LoadedImpl implements Loaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<TodoModel> tasks)? loaded,
-    TResult Function(String message)? failure,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -424,7 +424,7 @@ class _$LoadedImpl implements Loaded {
     required TResult Function(_Initial value) initial,
     required TResult Function(Loading value) loading,
     required TResult Function(Loaded value) loaded,
-    required TResult Function(Failure value) failure,
+    required TResult Function(Error value) error,
   }) {
     return loaded(this);
   }
@@ -435,7 +435,7 @@ class _$LoadedImpl implements Loaded {
     TResult? Function(_Initial value)? initial,
     TResult? Function(Loading value)? loading,
     TResult? Function(Loaded value)? loaded,
-    TResult? Function(Failure value)? failure,
+    TResult? Function(Error value)? error,
   }) {
     return loaded?.call(this);
   }
@@ -446,7 +446,7 @@ class _$LoadedImpl implements Loaded {
     TResult Function(_Initial value)? initial,
     TResult Function(Loading value)? loading,
     TResult Function(Loaded value)? loaded,
-    TResult Function(Failure value)? failure,
+    TResult Function(Error value)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -466,20 +466,20 @@ abstract class Loaded implements GetTasksState {
 }
 
 /// @nodoc
-abstract class _$$FailureImplCopyWith<$Res> {
-  factory _$$FailureImplCopyWith(
-          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
-      __$$FailureImplCopyWithImpl<$Res>;
+abstract class _$$ErrorImplCopyWith<$Res> {
+  factory _$$ErrorImplCopyWith(
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$FailureImplCopyWithImpl<$Res>
-    extends _$GetTasksStateCopyWithImpl<$Res, _$FailureImpl>
-    implements _$$FailureImplCopyWith<$Res> {
-  __$$FailureImplCopyWithImpl(
-      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
+class __$$ErrorImplCopyWithImpl<$Res>
+    extends _$GetTasksStateCopyWithImpl<$Res, _$ErrorImpl>
+    implements _$$ErrorImplCopyWith<$Res> {
+  __$$ErrorImplCopyWithImpl(
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -487,7 +487,7 @@ class __$$FailureImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$FailureImpl(
+    return _then(_$ErrorImpl(
       null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -498,22 +498,22 @@ class __$$FailureImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FailureImpl implements Failure {
-  const _$FailureImpl(this.message);
+class _$ErrorImpl implements Error {
+  const _$ErrorImpl(this.message);
 
   @override
   final String message;
 
   @override
   String toString() {
-    return 'GetTasksState.failure(message: $message)';
+    return 'GetTasksState.error(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FailureImpl &&
+            other is _$ErrorImpl &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -523,8 +523,8 @@ class _$FailureImpl implements Failure {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
-      __$$FailureImplCopyWithImpl<_$FailureImpl>(this, _$identity);
+  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -532,9 +532,9 @@ class _$FailureImpl implements Failure {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<TodoModel> tasks) loaded,
-    required TResult Function(String message) failure,
+    required TResult Function(String message) error,
   }) {
-    return failure(message);
+    return error(message);
   }
 
   @override
@@ -543,9 +543,9 @@ class _$FailureImpl implements Failure {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(List<TodoModel> tasks)? loaded,
-    TResult? Function(String message)? failure,
+    TResult? Function(String message)? error,
   }) {
-    return failure?.call(message);
+    return error?.call(message);
   }
 
   @override
@@ -554,11 +554,11 @@ class _$FailureImpl implements Failure {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<TodoModel> tasks)? loaded,
-    TResult Function(String message)? failure,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
-    if (failure != null) {
-      return failure(message);
+    if (error != null) {
+      return error(message);
     }
     return orElse();
   }
@@ -569,9 +569,9 @@ class _$FailureImpl implements Failure {
     required TResult Function(_Initial value) initial,
     required TResult Function(Loading value) loading,
     required TResult Function(Loaded value) loaded,
-    required TResult Function(Failure value) failure,
+    required TResult Function(Error value) error,
   }) {
-    return failure(this);
+    return error(this);
   }
 
   @override
@@ -580,9 +580,9 @@ class _$FailureImpl implements Failure {
     TResult? Function(_Initial value)? initial,
     TResult? Function(Loading value)? loading,
     TResult? Function(Loaded value)? loaded,
-    TResult? Function(Failure value)? failure,
+    TResult? Function(Error value)? error,
   }) {
-    return failure?.call(this);
+    return error?.call(this);
   }
 
   @override
@@ -591,21 +591,21 @@ class _$FailureImpl implements Failure {
     TResult Function(_Initial value)? initial,
     TResult Function(Loading value)? loading,
     TResult Function(Loaded value)? loaded,
-    TResult Function(Failure value)? failure,
+    TResult Function(Error value)? error,
     required TResult orElse(),
   }) {
-    if (failure != null) {
-      return failure(this);
+    if (error != null) {
+      return error(this);
     }
     return orElse();
   }
 }
 
-abstract class Failure implements GetTasksState {
-  const factory Failure(final String message) = _$FailureImpl;
+abstract class Error implements GetTasksState {
+  const factory Error(final String message) = _$ErrorImpl;
 
   String get message;
   @JsonKey(ignore: true)
-  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
+  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

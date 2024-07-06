@@ -1,9 +1,10 @@
-import 'package:do_todo/build_notes_item.dart';
-import 'package:do_todo/custom_app_bar.dart';
-import 'package:do_todo/get_tasks_cubit.dart';
-import 'package:do_todo/header.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/widgets/tasks_view/custom_app_bar.dart';
+import 'package:do_todo/Do_Todo/presentation/widgets/tasks_view/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'build_notes_item.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({

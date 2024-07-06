@@ -1,4 +1,4 @@
-import 'package:do_todo/constant.dart';
+import 'package:do_todo/core/utils/constant.dart';
 import 'package:do_todo/core/widgets/color_items.dart';
 import 'package:flutter/material.dart';
 

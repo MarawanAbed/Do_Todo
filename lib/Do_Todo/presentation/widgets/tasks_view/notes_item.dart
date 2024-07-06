@@ -1,11 +1,9 @@
-import 'package:do_todo/custom_button.dart';
-import 'package:do_todo/get_tasks_cubit.dart';
-import 'package:do_todo/notification_services.dart';
-import 'package:do_todo/todo_model.dart';
+import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/pages/edit_task/edit_task_page.dart';
+import 'package:do_todo/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'database_services.dart';
 
 class NotesItems extends StatefulWidget {
   const NotesItems({
@@ -20,8 +18,6 @@ class NotesItems extends StatefulWidget {
 }
 
 class _NotesItemsState extends State<NotesItems> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -37,10 +33,10 @@ class _NotesItemsState extends State<NotesItems> {
                   CustomButton(
                     title: 'Task Completed',
                     onPressed: () {
-                      print(widget.todoModel.id!);
-                      _databaseHelper.delete(widget.todoModel.id!);
-                      NotificationService().cancelNotification(widget.todoModel.id!);
-                      NotificationService().cancelNotification(widget.todoModel.id!+1);
+                      var cubit = context.read<GetTasksCubit>();
+                      cubit.deleteTask(widget.todoModel.id!);
+                      cubit.cancelNotification(widget.todoModel.id!);
+                      cubit.cancelNotification(widget.todoModel.id! + 1);
                       context.read<GetTasksCubit>().getTasks();
                       Navigator.pop(context);
                     },
@@ -50,7 +46,16 @@ class _NotesItemsState extends State<NotesItems> {
                   ),
                   CustomButton(
                     title: 'Edit Task',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditTaskPage(
+                            todoModel: widget.todoModel,
+                          ),
+                        ),
+                      );
+                    },
                     color: Colors.green,
                   ),
                   const SizedBox(
@@ -59,11 +64,12 @@ class _NotesItemsState extends State<NotesItems> {
                   CustomButton(
                     title: 'Delete Task',
                     onPressed: () {
-                      _showDialogConfirm().then((value) {
-                        NotificationService().cancelNotification(widget.todoModel.id!);
-                        NotificationService().cancelNotification(widget.todoModel.id!+1);
+                      var cubit = context.read<GetTasksCubit>();
+                      _showDialogConfirm(cubit).then((value) {
+                        cubit.cancelNotification(widget.todoModel.id!);
+                        cubit.cancelNotification(widget.todoModel.id! + 1);
                         Navigator.pop(context);
-                        context.read<GetTasksCubit>().getTasks();
+                        cubit.getTasks();
                       });
                     },
                     color: Colors.red,
@@ -170,7 +176,7 @@ class _NotesItemsState extends State<NotesItems> {
     );
   }
 
-  _showDialogConfirm() {
+  _showDialogConfirm(GetTasksCubit cubit) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -187,7 +193,7 @@ class _NotesItemsState extends State<NotesItems> {
             TextButton(
               child: const Text('Delete'),
               onPressed: () {
-                _databaseHelper.delete(widget.todoModel.id!);
+                cubit.deleteTask(widget.todoModel.id!);
                 Navigator.of(context).pop();
               },
             ),

@@ -1,4 +1,5 @@
-import 'package:do_todo/Do_Todo/presentation/bloc/add_cubit/add_task_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,16 +8,22 @@ class AddTaskBlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddTaskCubit, AddTaskState>(
+    return BlocListener<AddTasksCubit, AddTasksState>(
       listener: (context, state) {
-        if (state is AddFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(state.error),
-            ),
-          );
-        }
+        state.whenOrNull(
+          error: (message) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          success: () {
+            context.read<GetTasksCubit>().getTasks();
+            Navigator.of(context).pop();
+          },
+        );
       },
       child: const SizedBox.shrink(),
     );

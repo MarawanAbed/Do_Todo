@@ -1,15 +1,12 @@
-import 'package:do_todo/Do_Todo/presentation/bloc/add_cubit/add_task_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/add_task/add_task_bloc_listener.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/add_task/add_task_text_fields.dart';
 import 'package:do_todo/core/widgets/colors_choose.dart';
 import 'package:do_todo/core/widgets/drop_button.dart';
 import 'package:do_todo/core/widgets/task_header.dart';
-import 'package:do_todo/get_tasks_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import '../../../../notification_services.dart';
 
 class AddTaskBody extends StatefulWidget {
   const AddTaskBody({super.key});
@@ -168,10 +165,10 @@ class _AddTaskBodyState extends State<AddTaskBody> {
   }
 
   _createTask() {
-    var cubit = BlocProvider.of<AddTaskCubit>(context);
+    var cubit = context.read<AddTasksCubit>();
     if (_formKey.currentState!.validate()) {
       cubit
-          .addTask(selectedRepeat,
+          .addTasks(selectedRepeat,
               selectedColor.value?.value ?? const Color(0xFFE57373).value)
           .then((value) async {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -184,26 +181,22 @@ class _AddTaskBodyState extends State<AddTaskBody> {
             '${cubit.dateController.text} ${cubit.startTimeController.text}');
         DateTime endDate = DateFormat('yyyy-MM-dd hh:mm a').parse(
             '${cubit.dateController.text} ${cubit.endTimeController.text}');
-        NotificationService().scheduleNotification(
-          id: value,
-          title: '${cubit.titleController.text} is about to start.',
-          body: cubit.descriptionController.text,
-          scheduledNotificationDateTime: startDate,
-          repeat: selectedRepeat,
-          endTime: endDate,
-          startTime: startDate,
+        cubit.scheduleNotification(
+          value,
+          startDate,
+          selectedRepeat,
+          startDate,
+          endDate,
+          '${cubit.titleController.text} is about to start.',
         );
-        NotificationService().scheduleNotification(
-          id: value + 1,
-          title: '${cubit.titleController.text} is about to end.',
-          body: cubit.descriptionController.text,
-          scheduledNotificationDateTime: endDate,
-          repeat: selectedRepeat,
-          endTime: endDate,
-          startTime: startDate,
+        cubit.scheduleNotification(
+          value + 1,
+          endDate,
+          selectedRepeat,
+          startDate,
+          endDate,
+          '${cubit.titleController.text} is about to end.',
         );
-        Navigator.pop(context);
-        context.read<GetTasksCubit>().getTasks();
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
