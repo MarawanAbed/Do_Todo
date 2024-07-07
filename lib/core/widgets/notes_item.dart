@@ -20,7 +20,6 @@ class NotesItems extends StatefulWidget {
 class _NotesItemsState extends State<NotesItems> {
   @override
   Widget build(BuildContext context) {
-    var dark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         showBottomSheet(
@@ -28,7 +27,7 @@ class _NotesItemsState extends State<NotesItems> {
           context: context,
           builder: (context) => Container(
             padding: const EdgeInsets.all(30),
-            child: IntrinsicHeight(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
                   CustomButton(

@@ -1,4 +1,5 @@
 import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/pages/search_task/search_task_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,11 @@ class CustomAppBar extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const SearchTaskPage();
+            }));
+          },
           icon: Icon(
             CupertinoIcons.search,
             size: 30,

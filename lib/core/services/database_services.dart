@@ -80,4 +80,14 @@ class DatabaseHelper {
     Database db = await initDatabase();
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
+
+  Future<List<Map<String, dynamic>>> searchTasks(String query) async {
+    Database db = await initDatabase();
+    List<Map<String, dynamic>> results = await db.query(
+      table,
+      where: '$columnTitle LIKE ?',
+      whereArgs: ['%$query%'],
+    );
+    return results;
+  }
 }

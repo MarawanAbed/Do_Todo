@@ -1,22 +1,27 @@
 import 'package:do_todo/Do_Todo/data/data_sources/add_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/data_sources/edit_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/data_sources/get_tasks_local_data_source.dart';
+import 'package:do_todo/Do_Todo/data/data_sources/search_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/repositories/add_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/data/repositories/edit_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/data/repositories/get_tasks_repo_impl.dart';
+import 'package:do_todo/Do_Todo/data/repositories/search_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/add_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/edit_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/get_tasks_repo.dart';
+import 'package:do_todo/Do_Todo/domain/repositories/search_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/cancel_notification_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/delete_tasks_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/schedule_notification_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/search_tasks_use_case.dart';
 import 'package:do_todo/Do_Todo/domain/use_cases/update_notification_use_case.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
+import 'package:do_todo/Do_Todo/presentation/bloc/search_tasks/search_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
 import 'package:do_todo/core/helpers/cached.dart';
 import 'package:do_todo/core/services/database_services.dart';
@@ -53,6 +58,7 @@ void setupDi() async{
   getIt.registerLazySingleton<GetTasksLocalDataSource>(() =>
       GetTasksLocalDataSourceImpl(
           databaseHelper: getIt(), notificationService: getIt()));
+  getIt.registerLazySingleton<SearchTasksLocalDataSource>(() => SearchTasksLocalDataSourceImpl(getIt()));
 
   /// repository
   getIt.registerLazySingleton<AddTasksRepo>(
@@ -61,6 +67,7 @@ void setupDi() async{
       () => EditTasksRepoImpl(dataSource: getIt()));
   getIt.registerLazySingleton<GetTasksRepo>(
       () => GetTasksRepoImpl(getTasksLocalDataSource: getIt()));
+  getIt.registerLazySingleton<SearchTasksRepo>(() => SearchTasksRepoImpl(getIt()));
 
   /// use cases
   getIt.registerLazySingleton<AddTasksUseCase>(
@@ -77,10 +84,11 @@ void setupDi() async{
       () => ScheduleNotificationUseCase(repo: getIt()));
   getIt.registerLazySingleton<DeleteTasksUseCase>(
       () => DeleteTasksUseCase(getIt()));
-
+  getIt.registerLazySingleton<SearchTasksUseCase>(() => SearchTasksUseCase(getIt()));
   ///cubit
   getIt.registerFactory<AddTasksCubit>(() => AddTasksCubit(getIt(), getIt()));
   getIt.registerFactory<GetTasksCubit>(() => GetTasksCubit(getIt(), getIt(), getIt()));
   getIt.registerFactory<EditTaskCubit>(() => EditTaskCubit(getIt(), getIt()));
   getIt.registerFactory<DarkThemeCubit>(() => DarkThemeCubit());
+  getIt.registerFactory<SearchTasksCubit>(() => SearchTasksCubit(getIt()));
 }

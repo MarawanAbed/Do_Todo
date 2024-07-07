@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/assets/generated/assets.dart';
-import 'notes_item.dart';
+import '../../../../core/widgets/notes_item.dart';
 
 class BuildNotesItem extends StatefulWidget {
   const BuildNotesItem({
