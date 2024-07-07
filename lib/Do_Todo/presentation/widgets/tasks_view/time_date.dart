@@ -20,7 +20,7 @@ class _TimeDateState extends State<TimeDate> {
     var dark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: 100,
+      height: 120,
       child: DatePicker(
         DateTime.now(),
         initialSelectedDate: widget.initialSelectedDate,

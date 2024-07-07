@@ -1,16 +1,15 @@
-# do_todo
+# Do Todo
 
-A new Flutter project.
+Do Todo is an innovative task management application built with Flutter. It's designed to help you manage your daily tasks efficiently with a simple yet powerful interface. Whether you're planning your day, tracking your goals, or setting reminders, Do Todo makes it easy and intuitive.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Task Management**: Create, edit, and delete tasks with ease.
+- **Search Functionality**: Quickly find tasks using the built-in search feature.
+- **Dark Mode**: Supports dark mode for better usability in low-light conditions.
+- **Notifications**: Get reminders for your tasks so you never miss a deadline.
+- **Cross-Platform**: Runs smoothly on both Android and iOS devices.
 
-A few resources to get you started if this is your first Flutter project:
+## Download the App
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots

@@ -28,10 +28,7 @@ void main() async {
   await darkThemeCubit.getSavedTheme();
   getIt<DatabaseHelper>().initDatabase();
   Bloc.observer = MyBlocObserver();
-  runApp(DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) =>  DoTodo(
-      darkThemeCubit: darkThemeCubit,
-    ),
+  runApp(DoTodo(
+    darkThemeCubit: darkThemeCubit,
   ));
 }
