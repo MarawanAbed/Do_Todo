@@ -1,11 +1,12 @@
 import 'package:do_todo/Do_Todo/data/models/notification_model.dart';
 import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/update_notification_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks/update_notification_use_case.dart';
+import 'package:do_todo/core/helpers/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
+
+import '../../../domain/use_cases/edit_tasks/edit_tasks_use_case.dart';
 
 part 'edit_task_cubit.freezed.dart';
 part 'edit_task_state.dart';
@@ -51,11 +52,11 @@ class EditTaskCubit extends Cubit<EditTaskState> {
     }
   }
 
-  Future<void> updateNotification( int id, String repeat) async {
-    DateTime startDate = DateFormat('yyyy-MM-dd hh:mm a')
-        .parse('${dateController.text} ${startTimeController.text}');
-    DateTime endDate = DateFormat('yyyy-MM-dd hh:mm a')
-        .parse('${dateController.text} ${endTimeController.text}');
+  Future<void> updateNotification(int id, String repeat) async {
+    DateTime startDate = HelperMethods()
+        .getDateTime(dateController.text, startTimeController.text);
+    DateTime endDate = HelperMethods()
+        .getDateTime(dateController.text, endTimeController.text);
     var startNotification = NotificationModel(
       title: '${titleController.text} is about to start.',
       body: descriptionController.text,
@@ -68,20 +69,18 @@ class EditTaskCubit extends Cubit<EditTaskState> {
     var endNotification = NotificationModel(
       title: '${titleController.text} is about to end.',
       body: descriptionController.text,
-      id: id+1,
+      id: id + 1,
       scheduledNotificationDateTime: endDate,
       repeat: repeat,
       endTime: endDate,
       startTime: startDate,
     );
 
-    if(isStartTimeSelected)
-    {
+    if (isStartTimeSelected) {
       print('startNotification');
       await _updateNotificationUseCase.call(startNotification);
     }
-    if(isEndTimeSelected)
-    {
+    if (isEndTimeSelected) {
       print('endNotification');
       await _updateNotificationUseCase.call(endNotification);
     }

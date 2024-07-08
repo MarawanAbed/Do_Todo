@@ -1,10 +1,11 @@
 import 'package:do_todo/Do_Todo/data/models/notification_model.dart';
 import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/schedule_notification_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks/add_tasks_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../domain/use_cases/add_tasks/schedule_notification_use_case.dart';
 
 part 'add_tasks_cubit.freezed.dart';
 

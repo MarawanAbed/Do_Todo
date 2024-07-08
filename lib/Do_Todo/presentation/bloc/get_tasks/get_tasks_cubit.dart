@@ -1,9 +1,11 @@
 import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/cancel_notification_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/delete_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks_use_case.dart';
+
+import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks/get_tasks_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../domain/use_cases/get_tasks/cancel_notification_use_case.dart';
+import '../../../domain/use_cases/get_tasks/delete_tasks_use_case.dart';
 
 part 'get_tasks_cubit.freezed.dart';
 part 'get_tasks_state.dart';

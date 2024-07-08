@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:do_todo/core/helpers/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -32,7 +33,7 @@ class NotificationService {
             final payloadData = jsonDecode(notificationResponse.payload!);
             List<String> keywords = ['is about to end.', 'is about to start.'];
             // Filter the title
-            String filteredTitle = filterTitle(payloadData['title'], keywords);
+            String filteredTitle = HelperMethods().filterTitle(payloadData['title'], keywords);
 
             String body = payloadData['body'];
             String startTime = payloadData['formattedStartTime'];
@@ -187,12 +188,3 @@ class NotificationService {
   }
 }
 
-String filterTitle(String fullTitle, List<String> keywords) {
-  String filteredTitle = fullTitle;
-  for (String keyword in keywords) {
-    if (filteredTitle.contains(keyword)) {
-      filteredTitle = filteredTitle.replaceAll(keyword, '').trim();
-    }
-  }
-  return filteredTitle;
-}

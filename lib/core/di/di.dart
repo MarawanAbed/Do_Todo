@@ -10,14 +10,13 @@ import 'package:do_todo/Do_Todo/domain/repositories/add_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/edit_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/get_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/search_tasks_repo.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/cancel_notification_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/delete_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/schedule_notification_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/search_tasks_use_case.dart';
-import 'package:do_todo/Do_Todo/domain/use_cases/update_notification_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks/add_tasks_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks/get_tasks_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks/edit_tasks_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/get_tasks/delete_tasks_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/add_tasks/schedule_notification_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/search_tasks/search_tasks_use_case.dart';
+import 'package:do_todo/Do_Todo/domain/use_cases/edit_tasks/update_notification_use_case.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/get_tasks/get_tasks_cubit.dart';
@@ -29,6 +28,8 @@ import 'package:do_todo/core/services/notification_services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Do_Todo/domain/use_cases/get_tasks/cancel_notification_use_case.dart';
 
 var getIt = GetIt.instance;
 

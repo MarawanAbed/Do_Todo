@@ -1,7 +1,7 @@
 import 'package:do_todo/Do_Todo/presentation/widgets/notification/row_details.dart';
+import 'package:do_todo/core/helpers/helper_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class NotificationBody extends StatelessWidget {
   const NotificationBody({super.key, required this.title, required this.body, required this.startTime, required this.endTime,});
@@ -12,8 +12,8 @@ class NotificationBody extends StatelessWidget {
   final String endTime;
   @override
   Widget build(BuildContext context) {
-    final formattedStartTime = formatDateTime(startTime);
-    final formattedEndTime = formatDateTime(endTime);
+    final formattedStartTime = HelperMethods().formatDateTime(startTime);
+    final formattedEndTime = HelperMethods().formatDateTime(endTime);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -78,15 +78,4 @@ class NotificationBody extends StatelessWidget {
 }
 
 
-String formatDateTime(String dateTimeString) {
-  // Parse the original string to DateTime object
-  DateTime dateTime = DateTime.parse(dateTimeString);
 
-  // Create a DateFormat with the desired output format "d-M-yyyy"
-  DateFormat outputFormat = DateFormat("yyyy-MM-dd h:mm a");
-
-  // Format the DateTime object to the desired string format
-  String formattedString = outputFormat.format(dateTime);
-
-  return formattedString;
-}

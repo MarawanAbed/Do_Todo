@@ -2,11 +2,11 @@ import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/edit_task/edit_task_bloc_listener.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/edit_task/edit_task_text_fields.dart';
+import 'package:do_todo/core/widgets/row_button.dart';
 import 'package:do_todo/core/widgets/task_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/widgets/colors_choose.dart';
 import '../../../../core/widgets/drop_button.dart';
 
 class EditTaskBody extends StatefulWidget {
@@ -22,7 +22,6 @@ class _EditTaskBodyState extends State<EditTaskBody> {
   late ValueNotifier<Color?> selectedColor;
   late String selectedRepeat;
 
-
   @override
   void initState() {
     selectedColor = ValueNotifier<Color?>(Color(widget.todoModel.color));
@@ -32,7 +31,7 @@ class _EditTaskBodyState extends State<EditTaskBody> {
 
   @override
   Widget build(BuildContext context) {
-    var dark=Theme.of(context).brightness==Brightness.dark;
+    var dark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: CustomScrollView(
@@ -42,7 +41,7 @@ class _EditTaskBodyState extends State<EditTaskBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TaskHeader(
-                  dark: true,
+                  dark: dark,
                   title: 'Edit Task',
                   onBack: () {
                     Navigator.pop(context);
@@ -57,10 +56,10 @@ class _EditTaskBodyState extends State<EditTaskBody> {
                 const SizedBox(
                   height: 20,
                 ),
-                 Text(
+                Text(
                   'Repeat',
                   style: TextStyle(
-                    color: dark?Colors.white:Colors.black,
+                    color: dark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                   ),
@@ -81,10 +80,10 @@ class _EditTaskBodyState extends State<EditTaskBody> {
                 const SizedBox(
                   height: 20,
                 ),
-                 Text(
+                Text(
                   'Color',
                   style: TextStyle(
-                    color: dark?Colors.white:Colors.black,
+                    color: dark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                   ),
@@ -92,40 +91,12 @@ class _EditTaskBodyState extends State<EditTaskBody> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  children: [
-                    ColorsChoose(selectedColor: selectedColor),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          _updateTask();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          child: const Text(
-                            'Edit Task',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const EditTaskBlocListener(),
-                  ],
+                RowButton(
+                  selectedColor: selectedColor,
+                  onTap: _updateTask,
+                  title: 'Edit Task',
                 ),
+                const EditTaskBlocListener(),
               ],
             ),
           ),
