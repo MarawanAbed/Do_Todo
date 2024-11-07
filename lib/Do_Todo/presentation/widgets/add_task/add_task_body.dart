@@ -1,15 +1,15 @@
 import 'package:do_todo/Do_Todo/presentation/bloc/add_tasks/add_tasks_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/add_task/add_task_bloc_listener.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/add_task/add_task_text_fields.dart';
-import 'package:do_todo/core/helpers/helper_methods.dart';
-import 'package:do_todo/core/widgets/drop_button.dart';
-import 'package:do_todo/core/widgets/row_button.dart';
+import 'package:do_todo/core/widgets/colors_choose.dart';
 import 'package:do_todo/core/widgets/task_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddTaskBody extends StatefulWidget {
-  const AddTaskBody({super.key});
+  const AddTaskBody({super.key, required this.isChild});
+
+  final bool isChild;
 
   @override
   State<AddTaskBody> createState() => _AddTaskBodyState();
@@ -36,17 +36,16 @@ class _AddTaskBodyState extends State<AddTaskBody> {
     final shouldPop = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Unsaved changes'),
-        content: const Text(
-            'Are you sure you want to go back? Your changes will be lost.'),
+        title: const Text('ازالة التغييرات'),
+        content: const Text('هل تريد الخروج بدون حفظ التغييرات؟'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+            child: const Text('لا'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
+            child: const Text('نعم'),
           ),
         ],
       ),
@@ -77,14 +76,23 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TaskHeader(
-                        title: 'Add Task', onBack: _handleBack, dark: dark),
+                    widget.isChild
+                        ? TaskHeader(
+                            title: 'اضافة طفل', onBack: _handleBack, dark: dark)
+                        : TaskHeader(
+                            title: 'اضافة موظف',
+                            onBack: _handleBack,
+                            dark: dark),
                     const SizedBox(
                       height: 20,
                     ),
-                    AddTaskTextFields(onChanged: _onChange),
+                    AddTaskTextFields(
+                        onChanged: _onChange, isChild: widget.isChild),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(
-                      'Repeat',
+                      'الالوان',
                       style: TextStyle(
                         color: dark ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
@@ -94,35 +102,40 @@ class _AddTaskBodyState extends State<AddTaskBody> {
                     const SizedBox(
                       height: 10,
                     ),
-                    DropButton(
-                      hint: 'Select repeat',
-                      lists: const ['Daily', 'Weekly', 'Monthly', 'none'],
-                      selected: selectedRepeat,
-                      onSelected: (value) {
-                        setState(() {
-                          selectedRepeat = value;
-                          _hasUnsavedChanges = true;
-                        });
-                      },
-                    ),
+                    ColorsChoose(selectedColor: selectedColor),
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      'Color',
-                      style: TextStyle(
-                        color: dark ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    RowButton(
-                      selectedColor: selectedColor,
+                    GestureDetector(
                       onTap: _createTask,
-                      title: 'Add Task',
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue,
+                        ),
+                        child: widget.isChild
+                            ? Text(
+                                'اضافة طفل',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              )
+                            : Text(
+                                'اضافة موظف',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                      ),
                     ),
                     const AddTaskBlocListener(),
                   ],
@@ -139,41 +152,25 @@ class _AddTaskBodyState extends State<AddTaskBody> {
     var cubit = context.read<AddTasksCubit>();
     if (_formKey.currentState!.validate()) {
       cubit
-          .addTasks(selectedRepeat,
-              selectedColor.value?.value ?? const Color(0xFFE57373).value)
+          .addTasks(
+              selectedRepeat,
+              selectedColor.value?.value ?? const Color(0xFFE57373).value,
+              widget.isChild)
           .then((value) async {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Colors.green,
-            content: Text('Task added successfully'),
+            content: widget.isChild
+                ? Text('تمت اضافة الطفل')
+                : Text('تمت اضافة الموظف'),
           ),
-        );
-        DateTime startDate = HelperMethods().getDateTime(
-            cubit.dateController.text, cubit.startTimeController.text);
-        DateTime endDate = HelperMethods().getDateTime(
-            cubit.dateController.text, cubit.endTimeController.text);
-        cubit.scheduleNotification(
-          value,
-          startDate,
-          selectedRepeat,
-          startDate,
-          endDate,
-          '${cubit.titleController.text} is about to start.',
-        );
-        cubit.scheduleNotification(
-          value + 1,
-          endDate,
-          selectedRepeat,
-          startDate,
-          endDate,
-          '${cubit.titleController.text} is about to end.',
         );
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Please fill all fields'),
+          content: Text('الرجاء ملئ الحقول'),
         ),
       );
     }

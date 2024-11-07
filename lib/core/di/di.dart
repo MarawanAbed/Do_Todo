@@ -1,11 +1,9 @@
 import 'package:do_todo/Do_Todo/data/data_sources/add_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/data_sources/edit_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/data_sources/get_tasks_local_data_source.dart';
-import 'package:do_todo/Do_Todo/data/data_sources/search_tasks_local_data_source.dart';
 import 'package:do_todo/Do_Todo/data/repositories/add_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/data/repositories/edit_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/data/repositories/get_tasks_repo_impl.dart';
-import 'package:do_todo/Do_Todo/data/repositories/search_tasks_repo_impl.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/add_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/edit_tasks_repo.dart';
 import 'package:do_todo/Do_Todo/domain/repositories/get_tasks_repo.dart';
@@ -24,8 +22,6 @@ import 'package:do_todo/Do_Todo/presentation/bloc/search_tasks/search_tasks_cubi
 import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
 import 'package:do_todo/core/helpers/cached.dart';
 import 'package:do_todo/core/services/database_services.dart';
-import 'package:do_todo/core/services/notification_services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,13 +29,10 @@ import '../../Do_Todo/domain/use_cases/get_tasks/cancel_notification_use_case.da
 
 var getIt = GetIt.instance;
 
-void setupDi() async{
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  getIt.registerLazySingleton(() => notificationsPlugin);
+Future<void> setupDi() async{
 
-  getIt.registerLazySingleton<NotificationService>(
-          () => NotificationService(notificationsPlugin: getIt()));
+
+
   getIt.registerLazySingleton<SharedPreCacheHelper>(
           () => SharedPreCacheHelper(getIt<SharedPreferences>()));
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -52,14 +45,13 @@ void setupDi() async{
   ///data sources
   getIt.registerLazySingleton<AddTasksLocalDataSource>(() =>
       AddTasksLocalDataSourceImpl(
-          databaseHelper: getIt(), notificationModel: getIt()));
+          databaseHelper: getIt(),) );
   getIt.registerLazySingleton<EditTasksLocalDataSource>(() =>
       EditTasksLocalDataSourceImpl(
-          databaseHelper: getIt(), notificationService: getIt()));
+          databaseHelper: getIt(), ));
   getIt.registerLazySingleton<GetTasksLocalDataSource>(() =>
       GetTasksLocalDataSourceImpl(
-          databaseHelper: getIt(), notificationService: getIt()));
-  getIt.registerLazySingleton<SearchTasksLocalDataSource>(() => SearchTasksLocalDataSourceImpl(getIt()));
+          databaseHelper: getIt(), ));
 
   /// repository
   getIt.registerLazySingleton<AddTasksRepo>(
@@ -68,7 +60,6 @@ void setupDi() async{
       () => EditTasksRepoImpl(dataSource: getIt()));
   getIt.registerLazySingleton<GetTasksRepo>(
       () => GetTasksRepoImpl(getTasksLocalDataSource: getIt()));
-  getIt.registerLazySingleton<SearchTasksRepo>(() => SearchTasksRepoImpl(getIt()));
 
   /// use cases
   getIt.registerLazySingleton<AddTasksUseCase>(

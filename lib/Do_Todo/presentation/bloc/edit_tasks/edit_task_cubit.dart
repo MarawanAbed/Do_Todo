@@ -21,26 +21,21 @@ class EditTaskCubit extends Cubit<EditTaskState> {
   late TextEditingController descriptionController;
 
   late TextEditingController dateController;
-  bool isStartTimeSelected = false;
-  bool isEndTimeSelected = false;
+  late TextEditingController amountController;
+  late TextEditingController timeController;
 
-  late TextEditingController startTimeController;
 
-  late TextEditingController endTimeController;
-
-  Future<int> editTasks(int id, String repeat, int color) async {
+  Future<int> editTasks(int id,  int color,bool isChild) async {
     try {
       var task = TodoModel(
         id: id,
         title: titleController.text,
         description: descriptionController.text,
         date: dateController.text,
-        startTime: startTimeController.text,
-        endTime: endTimeController.text,
-        reminder: 5,
-        repeat: repeat,
+        isChild: isChild,
+        time: timeController.text,
         color: color,
-        isCompleted: 0,
+        amount: isChild ? double.tryParse(amountController.text) : null,
       );
       var updatedId = await _editTasksUseCase.call(task);
 
@@ -52,37 +47,4 @@ class EditTaskCubit extends Cubit<EditTaskState> {
     }
   }
 
-  Future<void> updateNotification(int id, String repeat) async {
-    DateTime startDate = HelperMethods()
-        .getDateTime(dateController.text, startTimeController.text);
-    DateTime endDate = HelperMethods()
-        .getDateTime(dateController.text, endTimeController.text);
-    var startNotification = NotificationModel(
-      title: '${titleController.text} is about to start.',
-      body: descriptionController.text,
-      id: id,
-      scheduledNotificationDateTime: startDate,
-      repeat: repeat,
-      endTime: endDate,
-      startTime: startDate,
-    );
-    var endNotification = NotificationModel(
-      title: '${titleController.text} is about to end.',
-      body: descriptionController.text,
-      id: id + 1,
-      scheduledNotificationDateTime: endDate,
-      repeat: repeat,
-      endTime: endDate,
-      startTime: startDate,
-    );
-
-    if (isStartTimeSelected) {
-      print('startNotification');
-      await _updateNotificationUseCase.call(startNotification);
-    }
-    if (isEndTimeSelected) {
-      print('endNotification');
-      await _updateNotificationUseCase.call(endNotification);
-    }
-  }
 }

@@ -31,13 +31,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  flutter_localizations:
+    sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   date_picker_timeline: ^1.2.6
   intl: ^0.19.0
-  dropdown_button2: ^2.3.9
   sqflite: any
   get_it: ^7.7.0
   path_provider: any
@@ -46,11 +46,9 @@ dependencies:
   freezed: ^2.5.2
   device_preview: ^1.2.0
   freezed_annotation: ^2.4.1
+  circular_menu: ^4.0.0
   flutter_svg: ^2.0.10+1
-  sqflite_common_ffi: ^2.3.3
-  flutter_local_notifications: ^13.0.0
-  timezone: ^0.9.0
-  flutter_native_timezone: ^2.0.0
+
   shared_preferences: ^2.2.3
 
 dev_dependencies:
@@ -61,20 +59,20 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/images/image.jpg"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: "assets/images/icon.png"
+    image_path: "assets/images/image.jpg"
     background_color: "#hexcode"
     theme_color: "#hexcode"
   windows:
     generate: true
-    image_path: "assets/images/icon.png"
+    image_path: "assets/images/image.jpg"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: "assets/images/icon.png"
+    image_path: "assets/images/image.jpg"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

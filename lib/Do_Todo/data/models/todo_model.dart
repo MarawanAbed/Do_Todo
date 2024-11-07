@@ -1,56 +1,47 @@
-class TodoModel
-{
+class TodoModel {
   final int? id;
   final String title;
   final String description;
   final String date;
-  final String startTime;
-  final String endTime;
-  final int reminder;
-  final String repeat;
+  final String? time;
   final int color;
-  final int isCompleted;
+  final double? amount;
+  final bool isChild;
 
   TodoModel({
     required this.id,
     required this.title,
+    required this.amount,
     required this.description,
     required this.date,
-    required this.startTime,
-    required this.endTime,
-    required this.reminder,
-    required this.repeat,
+    required this.time,
     required this.color,
-    required this.isCompleted,
+    required this.isChild,
   });
 
-
-factory TodoModel.fromMap(Map<String, dynamic> map) {
+  factory TodoModel.fromMap(Map<String, dynamic> map) {
     return TodoModel(
-      id: map['_id'],
-      title: map['title'],
-      description: map['description'],
-      date: map['date'],
-      startTime: map['start_time'],
-      endTime: map['end_time'],
-      reminder: map['reminder'],
-      repeat: map['repeat'],
+      id: map['_id'] as int,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      date: map['date'] as String,
+      time: map['time'] as String?, // Handle nullable time
       color: map['color'],
-      isCompleted: map['is_completed'],
+      amount: map['amount'] as double?,
+      isChild: map['isChild'] == 1, // Convert integer to boolean
     );
   }
-Map<String, dynamic> toMap() {
-    final map= {
+
+  Map<String, dynamic> toMap() {
+    final map = {
       '_id': id,
       'title': title,
       'description': description,
       'date': date,
-      'start_time': startTime,
-      'end_time': endTime,
-      'reminder': reminder,
-      'repeat': repeat,
+      'time': time,
       'color': color,
-      'is_completed': isCompleted,
+      'amount': amount,
+      'isChild': isChild ? 1 : 0, // Convert boolean to integer
     };
 
     if (id != null) {

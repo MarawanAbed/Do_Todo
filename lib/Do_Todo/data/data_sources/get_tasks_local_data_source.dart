@@ -1,7 +1,6 @@
 import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
 import 'package:do_todo/core/services/database_services.dart';
 
-import '../../../core/services/notification_services.dart';
 
 abstract class GetTasksLocalDataSource {
   Future<List<TodoModel>> getTasks();
@@ -12,14 +11,12 @@ abstract class GetTasksLocalDataSource {
 
 class GetTasksLocalDataSourceImpl implements GetTasksLocalDataSource {
   final DatabaseHelper _databaseHelper;
-  final NotificationService _notificationService;
 
 
-  GetTasksLocalDataSourceImpl(
-      {required DatabaseHelper databaseHelper,
-      required NotificationService notificationService})
-      : _databaseHelper = databaseHelper,
-        _notificationService = notificationService;
+  GetTasksLocalDataSourceImpl({required DatabaseHelper databaseHelper,
+  })
+      : _databaseHelper = databaseHelper
+   ;
   @override
   Future<List<TodoModel>> getTasks() async{
      var queries=await _databaseHelper.queryAllRows();
@@ -28,7 +25,6 @@ class GetTasksLocalDataSourceImpl implements GetTasksLocalDataSource {
 
   @override
   Future<void> cancelNotification(int id)async {
-    await _notificationService.cancelNotification(id);
   }
 
   @override

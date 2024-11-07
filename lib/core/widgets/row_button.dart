@@ -10,31 +10,27 @@ class RowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Row(
       children: [
-        ColorsChoose(selectedColor: selectedColor),
         const SizedBox(
           width: 20,
         ),
-        Expanded(
-          flex: 2,
-          child: GestureDetector(
-            onTap: (){
-              onTap();
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.blue,
-              ),
-              child: const Text(
-                'Edit Task',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+        GestureDetector(
+          onTap: (){
+            onTap();
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.blue,
+            ),
+            child: const Text(
+              'Edit Task',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
           ),

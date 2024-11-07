@@ -20,22 +20,20 @@ class AddTasksCubit extends Cubit<AddTasksState> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
-  final TextEditingController startTimeController = TextEditingController();
-  final TextEditingController endTimeController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
 
-  Future<int> addTasks(String selectedRepeat, int color) async {
+  Future<int> addTasks(String selectedRepeat, int color,bool isChild) async {
     try {
       var todo = TodoModel(
         id: null,
         title: titleController.text,
+        isChild: isChild,
         description: descriptionController.text,
+        amount: isChild ? double.tryParse(amountController.text) : null,
         date: dateController.text,
-        startTime: startTimeController.text,
-        endTime: endTimeController.text,
-        reminder: 5,
-        repeat: selectedRepeat,
         color: color,
-        isCompleted: 0,
+        time: timeController.text,
       );
       var id= await _addTasksUseCase.call(todo);
       emit(const AddTasksState.success());

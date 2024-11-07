@@ -5,14 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddTaskPage extends StatelessWidget {
-  const AddTaskPage({super.key});
-
+  const AddTaskPage({super.key, required this.isChild});
+  final bool isChild;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AddTasksCubit>(),
-      child: const Scaffold(
-        body: AddTaskBody(),
+      child:  Scaffold(
+        body: AddTaskBody(
+          isChild: isChild,
+        ),
       ),
     );
   }

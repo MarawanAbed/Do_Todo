@@ -11,22 +11,19 @@ class ColorsChoose extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: ValueListenableBuilder<Color?>(
-        valueListenable: selectedColor,
-        builder: (context, value, child) {
-          return SizedBox(
-            height: 50,
-            child: BuildColorItem(
-              selectedColor: value,
-              onSelectColor: (color) {
-                selectedColor.value = color;
-              },
-            ),
-          );
-        },
-      ),
+    return ValueListenableBuilder<Color?>(
+      valueListenable: selectedColor,
+      builder: (context, value, child) {
+        return SizedBox(
+          height: 50,
+          child: BuildColorItem(
+            selectedColor: value,
+            onSelectColor: (color) {
+              selectedColor.value = color;
+            },
+          ),
+        );
+      },
     );
   }
 }

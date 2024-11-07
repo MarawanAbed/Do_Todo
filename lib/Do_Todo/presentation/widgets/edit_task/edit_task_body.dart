@@ -2,6 +2,7 @@ import 'package:do_todo/Do_Todo/data/models/todo_model.dart';
 import 'package:do_todo/Do_Todo/presentation/bloc/edit_tasks/edit_task_cubit.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/edit_task/edit_task_bloc_listener.dart';
 import 'package:do_todo/Do_Todo/presentation/widgets/edit_task/edit_task_text_fields.dart';
+import 'package:do_todo/core/widgets/colors_choose.dart';
 import 'package:do_todo/core/widgets/row_button.dart';
 import 'package:do_todo/core/widgets/task_header.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class _EditTaskBodyState extends State<EditTaskBody> {
   @override
   void initState() {
     selectedColor = ValueNotifier<Color?>(Color(widget.todoModel.color));
-    selectedRepeat = widget.todoModel.repeat;
     super.initState();
   }
 
@@ -40,9 +40,15 @@ class _EditTaskBodyState extends State<EditTaskBody> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TaskHeader(
+                widget.todoModel.isChild?TaskHeader(
                   dark: dark,
-                  title: 'Edit Task',
+                  title: 'تعديل بيانات الطفل',
+                  onBack: () {
+                    Navigator.pop(context);
+                  },
+                ):TaskHeader(
+                  dark: dark,
+                  title: 'تعديل بيانات الموظف',
                   onBack: () {
                     Navigator.pop(context);
                   },
@@ -57,7 +63,7 @@ class _EditTaskBodyState extends State<EditTaskBody> {
                   height: 20,
                 ),
                 Text(
-                  'Repeat',
+                  'الالوان',
                   style: TextStyle(
                     color: dark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold,
@@ -67,34 +73,42 @@ class _EditTaskBodyState extends State<EditTaskBody> {
                 const SizedBox(
                   height: 10,
                 ),
-                DropButton(
-                  hint: selectedRepeat,
-                  lists: const ['Daily', 'Weekly', 'Monthly', 'none'],
-                  selected: selectedRepeat,
-                  onSelected: (value) {
-                    setState(() {
-                      selectedRepeat = value;
-                    });
-                  },
-                ),
+                ColorsChoose(selectedColor: selectedColor),
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  'Color',
-                  style: TextStyle(
-                    color: dark ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                GestureDetector(
+                  onTap: () async{
+                   await _updateTask();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue,
+                    ),
+                    child: widget.todoModel.isChild
+                        ? Text(
+                      ' تعديل بيانات الطفل',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )
+                        : Text(
+                      ' تعديل بيانات الموظف',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                RowButton(
-                  selectedColor: selectedColor,
-                  onTap: _updateTask,
-                  title: 'Edit Task',
                 ),
                 const EditTaskBlocListener(),
               ],
@@ -109,16 +123,16 @@ class _EditTaskBodyState extends State<EditTaskBody> {
     final shouldUpdate = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm'),
-        content: const Text('Are you sure you want to edit this task?'),
+        title: const Text('تاكيد'),
+        content: const Text('هل انت متاكد من تعديل المهمة؟'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+            child: const Text('لا'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
+            child: const Text('نعم'),
           ),
         ],
       ),
@@ -128,10 +142,9 @@ class _EditTaskBodyState extends State<EditTaskBody> {
       var cubit = context.read<EditTaskCubit>();
       await cubit.editTasks(
         widget.todoModel.id!,
-        selectedRepeat,
         selectedColor.value!.value,
+        widget.todoModel.isChild,
       );
-      await cubit.updateNotification(widget.todoModel.id!, selectedRepeat);
     }
   }
 }

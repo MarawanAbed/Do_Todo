@@ -14,6 +14,7 @@ class BuildNotesItem extends StatefulWidget {
     super.key,
   });
 
+
   @override
   State<BuildNotesItem> createState() => _BuildNotesItemState();
 }
@@ -21,21 +22,23 @@ class BuildNotesItem extends StatefulWidget {
 class _BuildNotesItemState extends State<BuildNotesItem> {
   DateTime selectedDate = DateTime.now(); // Initialize with today's date
 
+  String convertArabicToEnglishNumbers(String input) {
+    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    for (int i = 0; i < arabicNumbers.length; i++) {
+      input = input.replaceAll(arabicNumbers[i], englishNumbers[i]);
+    }
+    return input;
+  }
+
   List<TodoModel> filterTasks(List<TodoModel> tasks) {
     return tasks.where((task) {
-      DateTime taskDate = DateFormat('yyyy-MM-dd').parse(task.date);
-      switch (task.repeat) {
-        case 'Daily':
-          return true;
-        case 'Weekly':
-          return taskDate.weekday == selectedDate.weekday;
-        case 'Monthly':
-          return taskDate.day == selectedDate.day;
-        case 'none':
-        default:
-          return DateFormat('yyyy-MM-dd').format(taskDate) ==
-              DateFormat('yyyy-MM-dd').format(selectedDate);
-      }
+      if (task.date == null) return false; // Check for null date
+      String englishDate = convertArabicToEnglishNumbers(task.date!);
+      DateTime taskDate = DateFormat('yyyy-MM-dd').parse(englishDate);
+      return DateFormat('yyyy-MM-dd').format(taskDate) ==
+          DateFormat('yyyy-MM-dd').format(selectedDate);
     }).toList();
   }
 
@@ -71,7 +74,7 @@ class _BuildNotesItemState extends State<BuildNotesItem> {
                               width: 200,
                             ),
                             const Text(
-                              'No Task Available',
+                              'لا يوجد ملاحظات',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -88,6 +91,7 @@ class _BuildNotesItemState extends State<BuildNotesItem> {
                           var task = filteredTasks[index];
                           return NotesItems(
                             todoModel: task,
+
                           );
                         },
                         separatorBuilder: (context, index) {

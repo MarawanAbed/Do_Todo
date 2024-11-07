@@ -17,26 +17,26 @@ class TimeDate extends StatefulWidget {
 class _TimeDateState extends State<TimeDate> {
   @override
   Widget build(BuildContext context) {
-    var dark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       height: 120,
       child: DatePicker(
-        DateTime.now(),
+        DateTime(2024,9,1),
         initialSelectedDate: widget.initialSelectedDate,
         selectionColor: Colors.blue,
+        locale: 'ar',
         dateTextStyle: TextStyle(
-          color: dark ? Colors.white : Colors.black,
+          color: Colors.black,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
         dayTextStyle: TextStyle(
-          color: dark ? Colors.white : Colors.black,
+          color:  Colors.black,
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
         monthTextStyle: TextStyle(
-          color: dark ? Colors.white : Colors.black,
+          color:  Colors.black,
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),

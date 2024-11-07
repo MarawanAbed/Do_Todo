@@ -9,41 +9,14 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            DateFormat('MMMM d,yyyy EEEE').format(DateTime.now()),
-            style:  TextStyle(
-              color:dark? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddTaskPage(),
-              ),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.blue,
-            ),
-            child: const Text(
-              '+ Add Task',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
+        Text(
+          DateFormat('MMMM d,yyyy EEEE','ar').format(DateTime.now()),
+          style:  TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
       ],

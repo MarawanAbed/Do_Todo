@@ -1,5 +1,4 @@
 import 'package:do_todo/Do_Todo/presentation/bloc/theme/themes_cubit.dart';
-import 'package:do_todo/Do_Todo/presentation/pages/search_task/search_task_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,43 +10,33 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        BlocBuilder<DarkThemeCubit, DarkThemeState>(
-          builder: (context, state) {
-            return GestureDetector(
-              onTap: () {
-                context.read<DarkThemeCubit>().changeTheme(!state.isDark);
-              },
-              child: Icon(
-                Icons.dark_mode_outlined,
-                color: state.isDark ? Colors.white : Colors.black,
-              ),
-            );
-          },
-        ),
         Text(
-          'Do Todo',
+          'مؤسسة حياة',
           style: TextStyle(
-            color: dark ? Colors.white : Colors.black,
+            color:Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
         ),
-        IconButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return const SearchTaskPage();
-            }));
+        PopupMenuButton<String>(
+          onSelected: (String result) {
+            // Handle the selected option
+            print(result);
           },
-          icon: Icon(
-            CupertinoIcons.search,
-            size: 30,
-            color: dark ? Colors.white : Colors.black,
-          ),
-        )
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'Option 1',
+              child: Text('نسخة احتياطية'),
+            ),
+            const PopupMenuItem<String>(
+              value: 'Option 2',
+              child: Text('استرداد النسخة الاحتياطية'),
+            ),
+          ],
+        ),
       ],
     );
   }

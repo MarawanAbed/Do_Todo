@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static const _databaseName = "MyDatabase.db";
@@ -14,14 +14,11 @@ class DatabaseHelper {
   static const columnTitle = 'title';
   static const columnDescription = 'description';
   static const columnDate = 'date';
-  static const columnStartTime = 'start_time';
-  static const columnEndTime = 'end_time';
-  static const columnReminder = 'reminder';
-  static const columnRepeat = 'repeat';
+  static const columnTime = 'time';
   static const columnColor = 'color';
-  static const columnIsCompleted = 'is_completed';
+  static const columnAmount = 'amount';
+  static const columnIsChild = 'isChild';
 
-  final DatabaseFactory databaseFactory = databaseFactoryFfi;
 
   Future<Database> initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -29,51 +26,36 @@ class DatabaseHelper {
     return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
   }
 
-  Future<Database> initDesktopDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await databaseFactory.openDatabase(path, options: OpenDatabaseOptions(
-      version: _databaseVersion,
-      onCreate: _onCreate,
-    ));
-  }
-
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE $table (
-      $columnId INTEGER PRIMARY KEY AUTOINCREMENT, 
-      $columnTitle TEXT, 
-      $columnDescription TEXT, 
-      $columnDate TEXT, 
-      $columnStartTime TEXT, 
-      $columnEndTime TEXT, 
-      $columnReminder INTEGER, 
-      $columnRepeat TEXT, 
-      $columnColor INTEGER, 
-      $columnIsCompleted INTEGER
+      $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+      $columnTitle TEXT,
+      $columnDescription TEXT,
+      $columnDate TEXT,
+      $columnTime TEXT,
+      $columnColor INTEGER,
+      $columnAmount REAL,
+      $columnIsChild INTEGER
     )
   ''');
     print('Table created');
   }
 
   Future<int> insert(Map<String, dynamic> row) async {
-    Database db = await initDatabase(); // Example usage to ensure database is initialized
-    print('inserting row');
-    var id = await db.insert(table, row);
-    return id;
+    Database db = await initDatabase();
+    return await db.insert(table, row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database db = await initDatabase(); // Example usage to ensure database is initialized
+    Database db = await initDatabase();
     return await db.query(table);
   }
 
   Future<int> update(Map<String, dynamic> row) async {
-    Database db = await initDatabase(); // Example usage to ensure database is initialized
+    Database db = await initDatabase();
     int id = row[columnId];
-    var update = await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
-    print('updated row id: $update');
-    return update;
+    return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
@@ -81,13 +63,9 @@ class DatabaseHelper {
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<List<Map<String, dynamic>>> searchTasks(String query) async {
-    Database db = await initDatabase();
-    List<Map<String, dynamic>> results = await db.query(
-      table,
-      where: '$columnTitle LIKE ?',
-      whereArgs: ['%$query%'],
-    );
-    return results;
+  Future<void> deleteExistingDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, DatabaseHelper._databaseName);
+    await deleteDatabase(path);
   }
 }

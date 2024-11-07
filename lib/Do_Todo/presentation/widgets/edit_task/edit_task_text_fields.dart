@@ -18,14 +18,11 @@ class _EditTaskTextFieldsState extends State<EditTaskTextFields> {
   @override
   void initState() {
     var cubit = context.read<EditTaskCubit>();
-    cubit.startTimeController =
-        TextEditingController(text: widget.todoModel.startTime);
-    cubit.endTimeController =
-        TextEditingController(text: widget.todoModel.endTime);
     cubit.dateController = TextEditingController(text: widget.todoModel.date);
     cubit.titleController = TextEditingController(text: widget.todoModel.title);
-    cubit.descriptionController =
-        TextEditingController(text: widget.todoModel.description);
+    cubit.descriptionController = TextEditingController(text: widget.todoModel.description);
+    cubit.amountController= TextEditingController(text: widget.todoModel.amount.toString());
+    cubit.timeController= TextEditingController(text: widget.todoModel.time);
     super.initState();
   }
 
@@ -35,39 +32,52 @@ class _EditTaskTextFieldsState extends State<EditTaskTextFields> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFields(
-          title: 'Title',
+        widget.todoModel.isChild?TextFields(
+          title: 'اسم الطفل',
           controller: cubit.titleController,
-          hint: 'Enter title',
+          hint: 'ادخل اسم الطفل',
+        ):TextFields(
+          title: 'اسم الموظف',
+          controller: cubit.titleController,
+          hint: 'ادخل اسم الموظف',
         ),
         const SizedBox(
           height: 20,
         ),
         TextFields(
-          title: 'Description',
+          title: 'الوصف',
           controller: cubit.descriptionController,
-          hint: 'Enter description',
+          hint: 'ادخل الوصف',
         ),
         const SizedBox(
           height: 20,
         ),
+        if(widget.todoModel.isChild)
+          TextFields(
+            title: 'المبلغ المدفوع',
+            controller: cubit.amountController,
+            hint: 'ادخل المبلغ المدفوع',
+          ),
+        const SizedBox(
+          height: 20,
+        ),
         TextFields(
-          title: 'Date',
+          title: 'التاريخ',
           controller: cubit.dateController,
-          hint: 'Enter date',
+          hint: 'ادخل التاريخ',
           readable: true,
           suffixIcon: IconButton(
             onPressed: () {
               showDatePicker(
                 context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2025),
+                initialDate: DateTime(2024,9,1),
+                firstDate: DateTime(2024,9,1),
+                lastDate: DateTime(2029),
               ).then((value) {
                 print(value.toString());
                 setState(() {
                   cubit.dateController.text =
-                      DateFormat('yyyy-MM-dd').format(value!);
+                      DateFormat('yyyy-MM-dd','ar').format(value!);
                 });
               });
             },
@@ -77,63 +87,29 @@ class _EditTaskTextFieldsState extends State<EditTaskTextFields> {
         const SizedBox(
           height: 20,
         ),
-        Row(
-          children: [
-            Expanded(
-              child: TextFields(
-                title: 'Start Time',
-                controller: cubit.startTimeController,
-                hint: 'Enter start time',
-                readable: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    ).then(
-                      (value) {
-                        print(value?.format(context));
-                        setState(() {
-                          cubit.startTimeController.text =
-                              value!.format(context);
-                          cubit.isStartTimeSelected = true;
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.watch_later_outlined),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: TextFields(
-                title: 'End Time',
-                controller: cubit.endTimeController,
-                hint: 'Enter end time',
-                readable: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    ).then(
-                      (value) {
-                        print(value?.format(context));
-                        setState(() {
-                          cubit.endTimeController.text = value!.format(context);
-                          cubit.isEndTimeSelected = true;
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.watch_later_outlined),
-                ),
-              ),
-            ),
-          ],
+        TextFields(
+          title: 'الوقت',
+          controller: cubit.timeController,
+          hint: 'ادخل الوقت',
+          readable: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              ).then(
+                    (value) {
+                  print(value?.format(context));
+                  setState(() {
+                    cubit.timeController.text =
+                        value!.format(context);
+
+                  });
+                },
+              );
+            },
+            icon: const Icon(Icons.watch_later_outlined),
+          ),
         ),
         const SizedBox(
           height: 20,

@@ -5,27 +5,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskTextFields extends StatefulWidget {
-  const AddTaskTextFields({super.key,  required this.onChanged});
+  const AddTaskTextFields({super.key,  required this.onChanged, required this.isChild});
   final VoidCallback onChanged;
+  final bool isChild;
   @override
   State<AddTaskTextFields> createState() => _AddTaskTextFieldsState();
 }
 
 class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
-  late TextEditingController startTimeController;
-  late TextEditingController endTimeController;
+  late TextEditingController timeController;
   late TextEditingController dateController;
   late TextEditingController titleController;
   late TextEditingController descriptionController;
+  late TextEditingController amountController;
 
 
   @override
   void initState() {
     var cubit=context.read<AddTasksCubit>();
-    startTimeController = cubit.startTimeController;
-    endTimeController = cubit.endTimeController;
+    timeController = cubit.timeController;
     dateController = cubit.dateController;
     titleController = cubit.titleController;
+    amountController = cubit.amountController;
     descriptionController = cubit.descriptionController;
     super.initState();
   }
@@ -34,44 +35,57 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
     return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFields(
-          title: 'Title',
+        widget.isChild?TextFields(
+          title: 'اسم الطفل',
           controller: titleController,
-          hint: 'Enter title',
+          hint: 'ادخل اسم الطفل',
+          onChanged: widget.onChanged,
+        ):TextFields(
+          title: 'اسم الموظف',
+          controller: titleController,
+          hint: 'ادخل اسم الموظف',
           onChanged: widget.onChanged,
         ),
         const SizedBox(
           height: 20,
         ),
         TextFields(
-          title: 'Description',
+          title: 'الوصف',
           controller: descriptionController,
-          hint: 'Enter description',
+          hint: 'ادخل الوصف',
           onChanged: widget.onChanged,
-
         ),
         const SizedBox(
           height: 20,
         ),
+        if(widget.isChild)
+          TextFields(
+            title: 'المبلغ المدفوع',
+            controller: amountController,
+            hint: 'ادخل المبلغ المدفوع',
+            onChanged: widget.onChanged,
+          ),
+        const SizedBox(
+          height: 20,
+        ),
         TextFields(
-          title: 'Date',
+          title: 'التاريخ',
           controller: dateController,
-          hint: 'Enter date',
+          hint: 'ادخل التاريخ',
           readable: true,
           suffixIcon: IconButton(
             onPressed: () {
               showDatePicker(
                 context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2025),
+                initialDate: DateTime(2024,9,1),
+                firstDate: DateTime(2024,9,1),
+                lastDate: DateTime(2029),
               ).then((value) {
                 print(value.toString());
                 setState(() {
                   dateController.text =
-                      DateFormat('yyyy-MM-dd').format(value!);
+                      DateFormat('yyyy-MM-dd','ar').format(value!);
                   widget.onChanged();
-
                 });
               });
             },
@@ -81,65 +95,30 @@ class _AddTaskTextFieldsState extends State<AddTaskTextFields> {
         const SizedBox(
           height: 20,
         ),
-        Row(
-          children: [
-            Expanded(
-              child: TextFields(
-                title: 'Start Time',
-                controller: startTimeController,
-                hint: 'Enter start time',
-                readable: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    ).then(
-                          (value) {
-                        print(value?.format(context));
-                        setState(() {
-                          startTimeController.text =
-                              value!.format(context);
-                          widget.onChanged();
+        TextFields(
+          title: 'الوقت',
+          controller: timeController,
+          hint: 'ادخل الوقت',
+          readable: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              ).then(
+                    (value) {
+                  print(value?.format(context));
+                  setState(() {
+                    timeController.text =
+                        value!.format(context);
+                    widget.onChanged();
 
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.watch_later_outlined),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: TextFields(
-                title: 'End Time',
-                controller: endTimeController,
-                hint: 'Enter end time',
-                readable: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    ).then(
-                          (value) {
-                        print(value?.format(context));
-                        setState(() {
-                          endTimeController.text =
-                              value!.format(context);
-                          widget.onChanged();
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.watch_later_outlined),
-                ),
-              ),
-            ),
-          ],
+                  });
+                },
+              );
+            },
+            icon: const Icon(Icons.watch_later_outlined),
+          ),
         ),
         const SizedBox(
           height: 20,
